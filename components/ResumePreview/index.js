@@ -4,11 +4,15 @@ export default function ResumePreview({ templateId, data, scale = 1, forPrint = 
   const template = getTemplate(templateId);
   const TemplateComponent = template.component;
 
+  // A4 dimensions in pixels (210mm x 297mm at 96 DPI)
+  const a4Width = 793;
+  const a4Height = 1122;
+
   const wrapperStyle = fitLayout ? {
     transform: `scale(${scale})`,
     transformOrigin: 'top center',
-    width: '793px',
-    height: '1122px'
+    width: `${a4Width}px`,
+    height: `${a4Height}px`,
   } : {
     transform: `scale(${scale})`,
     transformOrigin: 'top center'

@@ -638,15 +638,21 @@ textarea.editable-field {
 .templates-grid {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 16px;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
+  align-items: start;
 }
 
 .template-card {
   cursor: pointer;
   transition: all 0.2s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0;
 }
 
 .template-preview-card {
@@ -655,26 +661,39 @@ textarea.editable-field {
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
-  height: 280px;
+  height: 410px;
   transition: all 0.2s;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8px;
+  margin-bottom: 0;
 }
 
 /* Ensure mini previews keep proper A4 ratio and are centered */
 .mini-preview-container {
   width: 100%;
-  height: 100%;
+  height: 393px;
+  max-height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   overflow: hidden;
-  background: #f9fafb;
+  background: transparent;
+  font-size: 14px;
+  position: relative;
+  margin: 0;
+}
+
+.mini-preview-container * {
+  box-sizing: border-box;
 }
 
 .templates-drawer .template-preview-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  position: relative;
 }
 
 /* Fit layout mode for mini previews */
@@ -683,11 +702,42 @@ textarea.editable-field {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   overflow: hidden;
+  background: white;
+  flex-shrink: 0;
+  display: block;
+  position: relative;
+  margin: 0 auto;
 }
 
 .resume-preview-wrapper.fit-layout .a4-page {
   width: 100%;
   height: 100%;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.resume-preview-wrapper.fit-layout .resume-template {
+  width: 100%;
+  height: 100%;
+  background: white;
+  padding: 4% !important;
+  box-sizing: border-box;
+}
+
+/* Compact spacing for drawer template previews */
+.templates-drawer .resume-preview-wrapper.fit-layout .resume-header {
+  margin-bottom: 0.4rem !important;
+  padding-bottom: 0.4rem !important;
+}
+
+.templates-drawer .resume-preview-wrapper.fit-layout .resume-section {
+  margin-bottom: 0.4rem !important;
+}
+
+.templates-drawer .resume-preview-wrapper.fit-layout .section-title {
+  font-size: 0.9em !important;
+  margin-bottom: 0.3rem !important;
 }
 
 /* Allow the grid to actually scroll inside a flex drawer */
@@ -757,18 +807,20 @@ textarea.editable-field {
 }
 
 .template-card-info {
-  padding: 12px 0;
+  padding: 12px 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+  min-height: 44px;
 }
 
 .template-card-info h4 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #111827;
   margin: 0;
+  line-height: 1.3;
 }
 
 .category-badge {

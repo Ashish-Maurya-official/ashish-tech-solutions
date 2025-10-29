@@ -35,7 +35,7 @@ function MiniPreview({ templateId, data }) {
       <ResumePreview
         templateId={templateId}
         data={data}
-        scale={0.22}
+        scale={0.35}
         fitLayout={true}
       />
     </div>
