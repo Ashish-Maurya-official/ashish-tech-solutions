@@ -1,0 +1,88 @@
+/* ============================================
+   MODERN TEMPLATE STYLES
+   ============================================ */
+
+.modern-template .resume-header {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563eb 100%);
+  color: white;
+  padding: 1.5em;
+  margin: -5% -5% 1.5em -5%;
+  border-bottom: none;
+  border-radius: 0 0 1em 1em;
+}
+
+.modern-template .resume-header h1,
+.modern-template .resume-header h2,
+.modern-template .contact-info span {
+  color: white;
+}
+
+.modern-template .resume-header h1 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modern-template .contact-info {
+  gap: 1.2em;
+}
+
+.modern-template .contact-info span {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3em 0.8em;
+  border-radius: 1em;
+  backdrop-filter: blur(10px);
+}
+
+.modern-template .section-title {
+  color: #3B82F6;
+  border-bottom: 2px solid #3B82F6;
+  padding-bottom: 0.4em;
+  position: relative;
+}
+
+.modern-template .section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, transparent);
+}
+
+.modern-template .skill-tag {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.modern-template .experience-item,
+.modern-template .education-item {
+  background: rgba(59, 130, 246, 0.02);
+  padding: 1em;
+  border-radius: 0.5em;
+  border-left: 3px solid #3B82F6;
+}
+
+.modern-template .exp-role,
+.modern-template .edu-degree {
+  color: #1e40af;
+}
+
+/* Hover effects for inline editing */
+.modern-template .inline-edit-display:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 0.25em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .modern-template .resume-header {
+    border-radius: 0 0 0.5em 0.5em;
+  }
+
+  .modern-template .contact-info {
+    flex-direction: column;
+    gap: 0.8em;
+    align-items: center;
+  }
+}

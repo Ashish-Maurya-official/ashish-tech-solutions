@@ -1,0 +1,192 @@
+/* ============================================
+   EXECUTIVE TEMPLATE STYLES
+   ============================================ */
+
+.executive-template .executive-header {
+  background: #1f2937;
+  color: white;
+  padding: 1.5em;
+  margin: -5% -5% 1.5em -5%;
+  text-align: center;
+  position: relative;
+}
+
+.executive-template .executive-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #DC2626, #EF4444, #DC2626);
+}
+
+.executive-template .executive-header h1,
+.executive-template .executive-header h2 {
+  color: white;
+}
+
+.executive-template .executive-header h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.executive-template .executive-header h2 {
+  font-size: 1.1em;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.executive-template .executive-contact {
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  gap: 1.5em;
+  margin-top: 1em;
+}
+
+.executive-template .executive-contact span {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3em 0.8em;
+  border-radius: 0.25em;
+  backdrop-filter: blur(5px);
+}
+
+.executive-template .executive-title {
+  color: #DC2626;
+  border-bottom: 2px solid #DC2626;
+  padding-bottom: 0.4em;
+  font-size: 1.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+.executive-template .executive-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 40%;
+  height: 2px;
+  background: linear-gradient(90deg, #DC2626, transparent);
+}
+
+.executive-template .two-column-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+  margin-top: 1.5em;
+}
+
+.executive-template .column-left,
+.executive-template .column-right {
+  background: rgba(220, 38, 38, 0.02);
+  padding: 1.2em;
+  border-radius: 0.5em;
+  border: 1px solid rgba(220, 38, 38, 0.1);
+}
+
+.executive-template .executive-skills .skill-item {
+  margin-bottom: 0.3em;
+  font-size: 0.9em;
+  color: #4b5563;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 1em;
+}
+
+.executive-template .executive-skills .skill-item::before {
+  content: '▪';
+  position: absolute;
+  left: 0;
+  color: #DC2626;
+  font-weight: bold;
+}
+
+.executive-template .experience-item,
+.executive-template .education-item {
+  background: rgba(31, 41, 55, 0.02);
+  padding: 1em;
+  border-radius: 0.5em;
+  border-left: 4px solid #DC2626;
+  margin-bottom: 1em;
+}
+
+.executive-template .exp-role,
+.executive-template .edu-degree {
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.executive-template .exp-company,
+.executive-template .edu-school {
+  color: #DC2626;
+  font-weight: 600;
+}
+
+.executive-template .summary-text {
+  background: rgba(31, 41, 55, 0.05);
+  padding: 1.2em;
+  border-radius: 0.5em;
+  border-left: 4px solid #1f2937;
+  font-style: italic;
+  font-size: 1em;
+}
+
+.executive-template .skill-tag {
+  background: #DC2626;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+}
+
+/* Professional quote styling */
+.executive-template .summary-text::before {
+  content: '"';
+  font-size: 2em;
+  color: #DC2626;
+  line-height: 0;
+  margin-right: 0.2em;
+  vertical-align: -0.2em;
+}
+
+.executive-template .summary-text::after {
+  content: '"';
+  font-size: 2em;
+  color: #DC2626;
+  line-height: 0;
+  margin-left: 0.2em;
+  vertical-align: -0.2em;
+}
+
+/* Hover effects for inline editing */
+.executive-template .inline-edit-display:hover {
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: 0.25em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .executive-template .two-column-section {
+    grid-template-columns: 1fr;
+    gap: 1em;
+  }
+
+  .executive-template .executive-contact {
+    flex-direction: column;
+    gap: 0.8em;
+    align-items: center;
+  }
+
+  .executive-template .executive-header h1 {
+    font-size: 1.8em;
+  }
+
+  .executive-template .column-left,
+  .executive-template .column-right {
+    padding: 1em;
+  }
+}

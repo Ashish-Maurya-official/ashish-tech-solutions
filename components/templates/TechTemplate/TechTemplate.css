@@ -1,0 +1,262 @@
+/* ============================================
+   TECH TEMPLATE STYLES
+   ============================================ */
+
+.tech-template {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+.tech-template .tech-header {
+  background: #f9fafb;
+  border-left: 4px solid #059669;
+  padding: 1.2em;
+  margin: -5% -5% 1.5em -5%;
+  position: relative;
+}
+
+.tech-template .tech-header::before {
+  content: '// Resume Header';
+  position: absolute;
+  top: 0.5em;
+  right: 1em;
+  font-size: 0.7em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.tech-template .tech-header h1 {
+  font-family: 'Segoe UI', sans-serif;
+  color: #1f2937;
+}
+
+.tech-template .tech-header h2 {
+  color: #059669;
+  font-weight: 600;
+}
+
+.tech-template .tech-contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
+  gap: 0.6em;
+  margin-top: 0.8em;
+  background: white;
+  padding: 0.8em;
+  border-radius: 0.25em;
+  border: 1px solid #e5e7eb;
+}
+
+.tech-template .tech-contact .contact-item {
+  font-size: 0.85em;
+  color: #4b5563;
+  line-height: 1.4;
+  font-family: monospace;
+}
+
+.tech-template .tech-contact .label {
+  font-weight: 600;
+  color: #059669;
+}
+
+.tech-template .tech-contact .contact-item::before {
+  content: '> ';
+  color: #059669;
+  font-weight: bold;
+}
+
+.tech-template .tech-title {
+  color: #059669;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  background: rgba(5, 150, 105, 0.05);
+  padding: 0.5em 0.8em;
+  border-radius: 0.25em;
+  border-left: 3px solid #059669;
+}
+
+.tech-template .title-icon {
+  color: #059669;
+  font-weight: 700;
+}
+
+.tech-template .tech-title::before {
+  content: 'function ';
+  color: #7c3aed;
+  font-weight: bold;
+}
+
+.tech-template .tech-title::after {
+  content: '() {';
+  color: #059669;
+}
+
+.tech-template .resume-section {
+  position: relative;
+  padding-left: 1em;
+}
+
+.tech-template .resume-section::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #059669, transparent);
+}
+
+.tech-template .tech-skills {
+  gap: 0.5em;
+}
+
+.tech-template .tech-skill-tag {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #059669;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8em;
+  position: relative;
+  padding-left: 1.2em;
+}
+
+.tech-template .tech-skill-tag::before {
+  content: '#';
+  position: absolute;
+  left: 0.4em;
+  color: #059669;
+  font-weight: bold;
+}
+
+.tech-template .experience-item,
+.tech-template .education-item {
+  background: rgba(5, 150, 105, 0.02);
+  border: 1px solid rgba(5, 150, 105, 0.1);
+  border-radius: 0.5em;
+  padding: 1em;
+  margin-bottom: 1em;
+  position: relative;
+}
+
+.tech-template .experience-item::before {
+  content: '// Experience Block';
+  position: absolute;
+  top: 0.3em;
+  right: 0.8em;
+  font-size: 0.7em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.tech-template .education-item::before {
+  content: '// Education Block';
+  position: absolute;
+  top: 0.3em;
+  right: 0.8em;
+  font-size: 0.7em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.tech-template .exp-role,
+.tech-template .edu-degree {
+  color: #7c3aed;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.tech-template .exp-company::before {
+  content: '@ ';
+  color: #059669;
+  font-weight: 700;
+}
+
+.tech-template .exp-company,
+.tech-template .edu-school {
+  color: #059669;
+  font-weight: 600;
+}
+
+.tech-template .exp-years,
+.tech-template .edu-years {
+  background: #1f2937;
+  color: white;
+  padding: 0.2em 0.5em;
+  border-radius: 0.25em;
+  font-size: 0.75em;
+  font-family: monospace;
+}
+
+.tech-template .exp-description {
+  background: rgba(31, 41, 55, 0.05);
+  padding: 0.8em;
+  border-radius: 0.25em;
+  border-left: 3px solid #6b7280;
+  margin-top: 0.5em;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.tech-template .summary-text {
+  background: rgba(5, 150, 105, 0.05);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: 0.5em;
+  padding: 1em;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.tech-template .summary-text::before {
+  content: '/* Professional Summary */';
+  position: absolute;
+  top: -0.8em;
+  left: 1em;
+  background: white;
+  padding: 0 0.5em;
+  font-size: 0.8em;
+  color: #6b7280;
+  font-family: monospace;
+}
+
+/* Code block styling */
+.tech-template .resume-section::after {
+  content: '}';
+  display: block;
+  color: #059669;
+  font-family: monospace;
+  margin-top: 0.5em;
+  font-size: 0.9em;
+}
+
+/* Terminal-like styling for contact info */
+.tech-template .tech-contact::before {
+  content: '$ whoami';
+  display: block;
+  color: #059669;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  font-family: monospace;
+}
+
+/* Hover effects for inline editing */
+.tech-template .inline-edit-display:hover {
+  background: rgba(5, 150, 105, 0.1);
+  border-radius: 0.25em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .tech-template .tech-contact {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-template .tech-header::before,
+  .tech-template .experience-item::before,
+  .tech-template .education-item::before {
+    display: none;
+  }
+
+  .tech-template .resume-section {
+    padding-left: 0.5em;
+  }
+}

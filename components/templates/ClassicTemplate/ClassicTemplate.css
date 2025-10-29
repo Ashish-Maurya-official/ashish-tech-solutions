@@ -1,0 +1,135 @@
+/* ============================================
+   CLASSIC TEMPLATE STYLES
+   ============================================ */
+
+.classic-template .resume-header {
+  text-align: center;
+  border-bottom: 2px solid #1f2937;
+  padding-bottom: 1em;
+  position: relative;
+}
+
+.classic-template .resume-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: #1f2937;
+}
+
+.classic-template .contact-info {
+  justify-content: center;
+  gap: 1.5em;
+}
+
+.classic-template .contact-info span::after {
+  content: '•';
+  margin-left: 1.5em;
+  color: #d1d5db;
+  font-weight: bold;
+}
+
+.classic-template .contact-info span:last-child::after {
+  display: none;
+}
+
+.classic-template .section-title {
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  position: relative;
+  margin-bottom: 1.2em;
+}
+
+.classic-template .section-divider {
+  height: 2px;
+  background: #1f2937;
+  margin-bottom: 0.8em;
+  position: relative;
+}
+
+.classic-template .section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+  background: #6b7280;
+}
+
+.classic-template .exp-header,
+.classic-template .edu-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2em;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5em;
+}
+
+.classic-template .exp-years,
+.classic-template .edu-years {
+  margin-top: 0.2em;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.classic-template .classic-skills {
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: #4b5563;
+  text-align: justify;
+}
+
+.classic-template .skill-tag {
+  background: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  font-weight: 600;
+}
+
+.classic-template .experience-item,
+.classic-template .education-item {
+  padding-bottom: 1em;
+  border-bottom: 1px dotted #d1d5db;
+}
+
+.classic-template .experience-item:last-child,
+.classic-template .education-item:last-child {
+  border-bottom: none;
+}
+
+.classic-template .summary-text {
+  font-style: italic;
+  text-align: center;
+  padding: 1em;
+  background: #f9fafb;
+  border-radius: 0.5em;
+  border: 1px solid #e5e7eb;
+}
+
+/* Hover effects for inline editing */
+.classic-template .inline-edit-display:hover {
+  background: rgba(31, 41, 55, 0.05);
+  border-radius: 0.25em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .classic-template .contact-info {
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .classic-template .contact-info span::after {
+    display: none;
+  }
+
+  .classic-template .section-title {
+    font-size: 0.95em;
+  }
+}

@@ -1,0 +1,278 @@
+/* ============================================
+   SELECT PAGE STYLES
+   ============================================ */
+
+.select-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 2rem 5%;
+  color: white;
+}
+
+.select-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.select-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.select-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.designs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.design-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.design-card.elevated {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.design-preview {
+  height: 300px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid;
+  aspect-ratio: 3/4;
+}
+
+.preview-mockup {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.mockup-header {
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.mockup-avatar {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mockup-name {
+  flex: 1;
+}
+
+.name-line,
+.title-line {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.name-line {
+  height: 16px;
+  width: 60%;
+}
+
+.title-line {
+  height: 12px;
+  width: 40%;
+}
+
+.mockup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content-section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.section-title {
+  height: 12px;
+  width: 30%;
+  border-radius: 3px;
+  margin-bottom: 0.8rem;
+}
+
+.content-line {
+  background: rgba(255, 255, 255, 0.4);
+  height: 8px;
+  border-radius: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.content-line.short {
+  width: 60%;
+}
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.use-template-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.use-template-btn:hover {
+  transform: scale(1);
+}
+
+.design-info {
+  text-align: center;
+}
+
+.design-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.design-category {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* Back Button */
+.back-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(-3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .designs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .select-page {
+    padding: 2rem 1rem;
+  }
+
+  .select-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .select-header p {
+    font-size: 1.1rem;
+  }
+
+  .designs-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .design-preview {
+    height: 250px;
+  }
+
+  .mockup-header {
+    height: 60px;
+    padding: 0.75rem;
+  }
+
+  .mockup-avatar {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .select-header h1 {
+    font-size: 2rem;
+  }
+
+  .design-preview {
+    height: 220px;
+  }
+
+  .design-card {
+    padding: 1rem;
+  }
+}

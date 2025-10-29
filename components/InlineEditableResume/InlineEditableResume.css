@@ -1,0 +1,215 @@
+/* ============================================
+   INLINE EDITING COMPONENT STYLES
+   ============================================ */
+
+.inline-editable .inline-edit-display {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  min-width: 20px;
+  min-height: 1em;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.inline-editable .inline-edit-display:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.inline-editable .inline-edit-display:focus {
+  outline: none;
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.inline-editable .inline-edit-display.empty {
+  color: #9ca3af;
+  font-style: italic;
+  background: rgba(156, 163, 175, 0.1);
+}
+
+.inline-editable .inline-edit-display.empty:hover {
+  color: #6b7280;
+  background: rgba(156, 163, 175, 0.15);
+}
+
+.inline-editable .inline-edit-display.empty::after {
+  content: ' (click to edit)';
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.inline-edit-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 2px solid #6366f1;
+  border-radius: 4px;
+  background: white;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  line-height: inherit;
+  outline: none;
+}
+
+.inline-edit-input {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  transition: all 0.2s ease;
+}
+
+.inline-edit-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+textarea.inline-edit-input {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+/* Specific inline edit styles for resume elements */
+.inline-editable .editable-name,
+.inline-editable .editable-title,
+.inline-editable .editable-summary {
+  display: block;
+  width: 100%;
+}
+
+.inline-editable .editable-contact,
+.inline-editable .editable-role,
+.inline-editable .editable-degree,
+.inline-editable .editable-company,
+.inline-editable .editable-school,
+.inline-editable .editable-years,
+.inline-editable .editable-skill {
+  display: inline-block;
+}
+
+.inline-editable .editable-summary {
+  min-height: 3em;
+}
+
+.inline-editable .editable-description {
+  display: block;
+  width: 100%;
+  min-height: 2em;
+}
+
+.inline-editable .editable-years {
+  white-space: nowrap;
+}
+
+.inline-editable .editable-skill {
+  min-width: 3em;
+}
+
+/* Loading state */
+.inline-edit-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.inline-edit-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 2px solid #6366f1;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.inline-edit-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.inline-edit-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Success state */
+.inline-edit-success {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Keyboard navigation */
+.inline-editable .inline-edit-display:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .inline-editable .inline-edit-display {
+    padding: 6px 8px;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .inline-edit-input {
+    padding: 8px 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  textarea.inline-edit-input {
+    min-height: 80px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .inline-editable .inline-edit-display:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .inline-edit-input {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .inline-editable .inline-edit-display,
+  .inline-edit-input {
+    transition: none;
+  }
+  
+  .inline-edit-loading::after {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .inline-editable .inline-edit-display {
+    cursor: default;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  .inline-editable .inline-edit-display.empty::after {
+    display: none;
+  }
+}
