@@ -194,8 +194,9 @@
   transform-origin: center center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  font-size: 14px;
   flex-shrink: 0;
+  container-type: inline-size;
+  container-name: resume;
 }
 
 .resume-preview-container * {
@@ -473,7 +474,8 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   transform: scale(0.7);
   transform-origin: top center;
-  font-size: 14px;
+  container-type: inline-size;
+  container-name: resume;
 }
 
 .modal-resume-preview * {
@@ -602,11 +604,14 @@
   }
 
   .design-preview {
-    height: 400px;
+    height: 500px;
   }
 
   .resume-preview-container {
-    transform: scale(0.38);
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+    transform: none;
   }
 
   .preview-btn,
@@ -636,7 +641,8 @@
   }
 
   .modal-resume-preview {
-    transform: scale(0.6);
+    width: 100%;
+    transform: none;
   }
 
   .modal-footer {
@@ -659,11 +665,14 @@
   }
 
   .design-preview {
-    height: 350px;
+    height: 450px;
   }
 
   .resume-preview-container {
-    transform: scale(0.32);
+    width: 100%;
+    height: auto;
+    min-height: 450px;
+    transform: none;
   }
 
   .design-info {
@@ -728,7 +737,8 @@
   }
 
   .modal-resume-preview {
-    transform: scale(0.45);
+    width: 100%;
+    transform: none;
   }
 
   .modal-footer {
