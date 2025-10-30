@@ -40,12 +40,12 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #1f2937;
   line-height: 1.5;
-  font-size: max(10px, min(14px, calc(0.7vw + 0.5vh)));
+  font-size: 1.5cqw;
 }
 
 /* Scale all text elements proportionally */
 .a4-page {
-  container-type: size;
+  container-type: inline-size;
   container-name: resume;
 }
 
@@ -213,7 +213,7 @@
   }
 }
 
-/* Container Queries */
+/* Container Queries - Only adjust padding, font scales automatically with cqw */
 @container resume (max-width: 600px) {
   .resume-template {
     padding: 4%;
