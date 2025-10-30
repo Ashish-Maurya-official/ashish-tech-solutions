@@ -1,0 +1,74 @@
+{
+  "name": "Ashish",
+  "title": "Full Stack Developer",
+  "email": "Ashish53245@gmail.com",
+  "phone": "+91 8887798423",
+  "location": "Chandauli, Uttar Pradesh, India",
+  "linkedin": "LinkedIn",
+  "github": "GitHub",
+  "summary": "Motivated and detail-oriented Computer Science student with hands-on experience in full-stack development, mobile apps, and cross-platform solutions. Proficient in Java, Flutter, and Spring Boot with a keen eye for UI/UX design and scalable architecture. Strong background in version control systems like GitHub and a solid understanding of data structures, algorithms, and software development methodologies. Seeking opportunities in software engineering and mobile development.",
+  "education": [
+    {
+      "school": "Microtek College of Management & Technology (VBSPU)",
+      "degree": "Bachelor of Computer Applications",
+      "years": "Aug 2022 – Jun 2025"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Student Management System",
+      "bullets": [
+        "Built a full-stack web application with a modern UI using HTML and Spring Boot, leading to efficient student record management.",
+        "Engineered the backend with Java, Spring Boot, Hibernate, and JPA, handling data storage for over 100 student records during testing.",
+        "Leveraged SQL (MySQL) for database management, reducing query latency by optimizing indexing.",
+        "Structured the MVC architecture with clean and aligned sections across pages to ensure consistency for better scalability.",
+        "Features include adding, updating, and deleting student records through a user-friendly multi-page interface."
+      ],
+      "link": "GitHub"
+    },
+    {
+      "name": "Real-Time Chat App",
+      "bullets": [
+        "Created and implemented a real-time chat app using Flutter, achieving message synchronization under 200 ms between two users.",
+        "Integrated Firebase Authentication for account creation and login, supporting up to 50 test users.",
+        "Incorporated image sharing with compression to maintain performance.",
+        "Features responsive UI, fast scrolling, and smooth page transitions."
+      ],
+      "link": "GitHub"
+    },
+    {
+      "name": "File Recovery Software",
+      "bullets": [
+        "Developed a Windows desktop app frontend in Flutter with an intuitive UI.",
+        "Integrated native C++ via FFI to fetch disk insights like size, available space, and used space with millisecond response times.",
+        "Application optimized for consistent performance under varying system loads.",
+        "Planning future iterations to support selective file recovery for NTFS and FAT partitions."
+      ],
+      "link": "GitHub"
+    },
+    {
+      "name": "Movie Search Android App",
+      "bullets": [
+        "Developed an Android app using Flutter, providing access to OMDB API data for over 500,000 movies.",
+        "Displays comprehensive information such as description, cast, release date, upcoming releases, and IMDb ratings.",
+        "Achieved app startup time under 2 seconds with optimized API handling.",
+        "Implemented search filters and pagination to improve data accessibility."
+      ],
+      "link": "GitHub"
+    }
+  ],
+  "experience": [],
+  "skills": [
+    "Languages: Java, C/C++, C, Dart",
+    "Frameworks: Spring Boot, Flutter",
+    "Web: HTML, REST API",
+    "Databases: MySQL, SQLite",
+    "Technologies: Firebase, UI/UX Design, Cross-Platform Development, Mobile Development, Version Control, GitHub, Data Structures, Algorithms",
+    "Tools: Git, GitHub, VS Code, Android Studio",
+    "Others: Agile, SDLC, MVC Architecture"
+  ],
+  "languages": [
+    "English (Professional)",
+    "Hindi (Native)"
+  ]
+}

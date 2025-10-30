@@ -1,16 +1,26 @@
 export default function ClassicTemplate({ data }) {
+    const contactItems = [
+        data.email && { icon: '✉', text: data.email },
+        data.phone && { icon: '☎', text: data.phone },
+        data.location && { icon: '📍', text: data.location },
+        data.linkedin && { icon: '🔗', text: data.linkedin },
+        data.github && { icon: '💻', text: data.github }
+    ].filter(Boolean);
+
     return (
         <div className="resume-template classic-template">
             <div className="resume-header classic-header">
                 <h1>{data.name || 'Your Name'}</h1>
-                <h2>{data.title || 'Your Title'}</h2>
-                <div className="contact-info">
-                    {data.email && <span>{data.email}</span>}
-                    {data.phone && <span>|</span>}
-                    {data.phone && <span>{data.phone}</span>}
-                    {data.location && <span>|</span>}
-                    {data.location && <span>{data.location}</span>}
-                </div>
+                {data.title && <h2>{data.title}</h2>}
+                {contactItems.length > 0 && (
+                    <div className="contact-info">
+                        {contactItems.map((item, idx) => (
+                            <span key={idx} className="contact-item">
+                                <span className="icon">{item.icon}</span> {item.text}
+                            </span>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <div className="resume-body">
@@ -19,23 +29,6 @@ export default function ClassicTemplate({ data }) {
                         <h3 className="section-title">SUMMARY</h3>
                         <div className="section-divider"></div>
                         <p className="summary-text">{data.summary}</p>
-                    </section>
-                )}
-
-                {data.experience && data.experience.length > 0 && (
-                    <section className="resume-section">
-                        <h3 className="section-title">EXPERIENCE</h3>
-                        <div className="section-divider"></div>
-                        {data.experience.map((exp, index) => (
-                            <div key={index} className="experience-item">
-                                <div className="exp-header">
-                                    <strong className="exp-role">{exp.role || 'Job Title'}</strong>
-                                    <span className="exp-years">{exp.years || 'Years'}</span>
-                                </div>
-                                <div className="exp-company">{exp.company || 'Company Name'}</div>
-                                {exp.description && <p className="exp-description">{exp.description}</p>}
-                            </div>
-                        ))}
                     </section>
                 )}
 
@@ -55,12 +48,46 @@ export default function ClassicTemplate({ data }) {
                     </section>
                 )}
 
+                {data.projects && data.projects.length > 0 && (
+                    <section className="resume-section">
+                        <h3 className="section-title">KEY PROJECTS</h3>
+                        <div className="section-divider"></div>
+                        {data.projects.map((project, index) => (
+                            <div key={index} className="project-item">
+                                <div className="project-header">
+                                    <strong className="project-name">{project.name || 'Project Name'}</strong>
+                                    {project.link && <span className="project-link">{project.link}</span>}
+                                </div>
+                                {project.bullets && (
+                                    <ul className="project-bullets">
+                                        {project.bullets.map((bullet, i) => (
+                                            <li key={i}>{bullet}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </section>
+                )}
+
                 {data.skills && data.skills.length > 0 && (
                     <section className="resume-section">
-                        <h3 className="section-title">SKILLS</h3>
+                        <h3 className="section-title">TECHNICAL SKILLS</h3>
                         <div className="section-divider"></div>
                         <div className="skills-list classic-skills">
-                            {data.skills.filter(skill => skill).join(' • ')}
+                            {data.skills.map((skill, index) => (
+                                <div key={index}>{skill}</div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {data.languages && data.languages.length > 0 && (
+                    <section className="resume-section">
+                        <h3 className="section-title">LANGUAGES</h3>
+                        <div className="section-divider"></div>
+                        <div className="languages-list">
+                            {data.languages.join(' • ')}
                         </div>
                     </section>
                 )}

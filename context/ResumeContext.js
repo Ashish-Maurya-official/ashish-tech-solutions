@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import resumeData from '../data/resumeData.json';
 
 const ResumeContext = createContext();
 
@@ -8,48 +9,28 @@ export function useResume() {
 
 // Sample data for all resume previews
 const sampleData = {
-  name: 'Alex Johnson',
-  title: 'Full Stack Developer',
-  email: 'alex.johnson@email.com',
-  phone: '+1 (555) 123-4567',
-  location: 'San Francisco, CA',
-  summary: 'Experienced full-stack developer with 5+ years building scalable web applications using React, Node.js, and cloud technologies.',
-  experience: [
-    {
-      role: 'Senior Software Engineer',
-      company: 'TechCorp Inc.',
-      years: '2021 - Present',
-      description: 'Led development of microservices architecture serving 1M+ users. Built React dashboards and Node.js APIs.'
-    },
-    {
-      role: 'Software Developer',
-      company: 'StartupXYZ',
-      years: '2019 - 2021',
-      description: 'Developed e-commerce platform features. Implemented payment systems and inventory management.'
-    }
-  ],
-  education: [
-    {
-      school: 'University of California, Berkeley',
-      degree: 'BS Computer Science',
-      years: '2015 - 2019'
-    }
-  ],
-  skills: ['React', 'Node.js', 'TypeScript', 'AWS', 'PostgreSQL', 'Docker', 'GraphQL'],
+  ...resumeData,
   // Section headings (editable)
   headings: {
     summary: 'Summary',
-    experience: 'Work Experience',
+    experience: 'Experience',
     education: 'Education',
-    skills: 'Skills'
+    skills: 'Technical Skills',
+    projects: 'Key Projects',
+    languages: 'Languages'
   },
-  // Custom sections
+  // Ensure arrays exist for optional sections
+  experience: resumeData.experience || [],
+  projects: resumeData.projects || [],
+  education: resumeData.education || [],
+  skills: resumeData.skills || [],
+  languages: resumeData.languages || [],
   customSections: []
 };
 
 export function ResumeProvider({ children }) {
   const [resumeData, setResumeData] = useState(sampleData);
-  const [selectedDesign, setSelectedDesign] = useState('modern');
+  const [selectedDesign, setSelectedDesign] = useState('classic');
 
   const updateField = (path, value) => {
     setResumeData(prev => {

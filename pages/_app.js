@@ -10,13 +10,7 @@ import '../styles/pages/404.css';
 import '../components/templates/base.css';
 
 // Template-specific styles
-import '../components/templates/ModernTemplate/ModernTemplate.css';
 import '../components/templates/ClassicTemplate/ClassicTemplate.css';
-import '../components/templates/CreativeTemplate/CreativeTemplate.css';
-import '../components/templates/MinimalTemplate/MinimalTemplate.css';
-import '../components/templates/ExecutiveTemplate/ExecutiveTemplate.css';
-import '../components/templates/TechTemplate/TechTemplate.css';
-import '../components/templates/ProfessionalTemplate/ProfessionalTemplate.css';
 
 // Component styles
 import '../components/InlineEditableResume/InlineEditableResume.css';

@@ -81,6 +81,7 @@ export default function InlineEditableResume({ templateId, data, updateField, up
 
     // Create editable version of data
     const editableData = {
+        ...data,
         // Editable headings
         headings: data.headings ? {
             summary: (
@@ -112,6 +113,22 @@ export default function InlineEditableResume({ templateId, data, updateField, up
                     value={data.headings.skills}
                     onChange={(val) => updateHeading('skills', val)}
                     placeholder="Skills"
+                    className="editable-heading"
+                />
+            ),
+            projects: (
+                <InlineEdit
+                    value={data.headings.projects}
+                    onChange={(val) => updateHeading('projects', val)}
+                    placeholder="Projects"
+                    className="editable-heading"
+                />
+            ),
+            languages: (
+                <InlineEdit
+                    value={data.headings.languages}
+                    onChange={(val) => updateHeading('languages', val)}
+                    placeholder="Languages"
                     className="editable-heading"
                 />
             )
@@ -226,7 +243,7 @@ export default function InlineEditableResume({ templateId, data, updateField, up
                 />
             )
         })),
-        skills: data.skills.map((skill, index) => (
+        skills: (data.skills || []).map((skill, index) => (
             <InlineEdit
                 key={index}
                 value={skill}
@@ -234,7 +251,9 @@ export default function InlineEditableResume({ templateId, data, updateField, up
                 placeholder="Skill"
                 className="editable-skill"
             />
-        ))
+        )),
+        projects: data.projects || [],
+        languages: data.languages || []
     };
 
     return (
