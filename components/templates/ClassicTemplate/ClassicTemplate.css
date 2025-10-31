@@ -1,39 +1,52 @@
 /* ============================================
    CLASSIC TEMPLATE STYLES
+   Traditional black and white professional layout
+   Features: Centered header, decorative borders, clean sections
    ============================================ */
 
+/* ============================================
+   HEADER SECTION
+   Centered layout with name, title, and contact info
+   ============================================ */
 .classic-template .resume-header {
-  text-align: center;
-  border-bottom: 2px solid #1f2937;
-  padding-bottom: 1em;
-  position: relative;
+  text-align: center;               /* Center all header content */
+  border-bottom: 2px solid #1f2937; /* Thick dark border below header */
+  padding-bottom: 1em;              /* Space between content and border */
+  position: relative;               /* Positioning context for decorative element */
 }
 
+/* Decorative accent line below header border */
 .classic-template .resume-header::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: #1f2937;
+  content: '';                      /* Empty content for decorative element */
+  position: absolute;               /* Position relative to header */
+  bottom: -2px;                     /* Align with bottom border */
+  left: 50%;                        /* Start at horizontal center */
+  transform: translateX(-50%);      /* Center the element */
+  width: 60px;                      /* Short accent line */
+  height: 2px;                      /* Same thickness as border */
+  background: #1f2937;              /* Dark color matching border */
 }
 
+/* ============================================
+   CONTACT INFORMATION
+   Centered layout with bullet separators
+   ============================================ */
 .classic-template .contact-info {
-  justify-content: center;
-  gap: 1.5em;
+  justify-content: center;          /* Center contact items horizontally */
+  gap: 1.5em;                       /* Space between contact items */
 }
 
+/* Bullet separator between contact items */
 .classic-template .contact-info span::after {
-  content: '•';
-  margin-left: 1.5em;
-  color: #d1d5db;
-  font-weight: bold;
+  content: '•';                     /* Bullet character */
+  margin-left: 1.5em;               /* Space before bullet */
+  color: #d1d5db;                   /* Light gray color */
+  font-weight: bold;                /* Bold bullet */
 }
 
+/* Remove bullet after last contact item */
 .classic-template .contact-info span:last-child::after {
-  display: none;
+  display: none;                    /* Hide bullet after last item */
 }
 
 .classic-template .section-title {

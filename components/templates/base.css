@@ -1,48 +1,63 @@
 /* ============================================
-   BASE TEMPLATE STYLES - FULLY SCALABLE
+   BASE TEMPLATE STYLES
+   Shared styles for all resume templates
+   Uses container query units (cqw) for responsive scaling
    ============================================ */
 
-/* A4 Page Sizing */
+/* ============================================
+   A4 PAGE CONTAINER
+   Main container that holds the resume content
+   ============================================ */
 .a4-page {
-  width: 100%;
-  min-height: 100%;
-  background: white;
-  margin: 0 auto;
-  position: relative;
-  overflow: hidden;
-  container-type: inline-size;
-  container-name: resume;
+  width: 100%;                    /* Full width of parent container */
+  min-height: 100%;               /* Minimum full height */
+  background: white;              /* White background for paper effect */
+  margin: 0 auto;                 /* Center horizontally */
+  position: relative;             /* Positioning context for children */
+  overflow: hidden;               /* Hide content that exceeds bounds */
+  container-type: inline-size;    /* Enable container queries based on width */
+  container-name: resume;         /* Name for container query targeting */
 }
 
+/* ============================================
+   RESUME PREVIEW WRAPPER
+   Wrapper for displaying resume in preview mode
+   ============================================ */
 .resume-preview-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background: white;
+  width: 100%;              /* Full width */
+  height: 100%;             /* Full height */
+  display: flex;            /* Flexbox for centering */
+  justify-content: center;  /* Center horizontally */
+  align-items: flex-start;  /* Align to top */
+  background: white;        /* White background */
 }
 
+/* Print-specific wrapper styles */
 .resume-preview-wrapper.for-print {
-  padding: 0;
-  background: white;
+  padding: 0;               /* Remove padding for printing */
+  background: white;        /* Ensure white background */
 }
 
+/* A4 dimensions for printing (210mm x 297mm) */
 .resume-preview-wrapper.for-print .a4-page {
-  width: 210mm;
-  min-height: 297mm;
+  width: 210mm;             /* A4 width in millimeters */
+  min-height: 297mm;        /* A4 height in millimeters */
 }
 
-/* Base Resume Template Styles */
+/* ============================================
+   BASE RESUME TEMPLATE
+   Main content container with responsive sizing
+   Uses cqw (container query width) units for scaling
+   ============================================ */
 .resume-template {
-  width: 100%;
-  height: 100%;
-  padding: 5cqw;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #1f2937;
-  line-height: 1.5;
-  font-size: 1.5cqw;
+  width: 100%;                    /* Full width of container */
+  height: 100%;                   /* Full height of container */
+  padding: 5cqw;                  /* 5% of container width - scales with size */
+  box-sizing: border-box;         /* Include padding in width/height */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  /* Professional font stack */
+  color: #1f2937;                 /* Dark gray text color */
+  line-height: 1.5;               /* Comfortable reading line height */
+  font-size: 1.5cqw;              /* Base font size - 1.5% of container width */
 }
 
 .resume-header {

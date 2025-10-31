@@ -1,103 +1,113 @@
 /* ============================================
    MODERN EDITOR PAGE STYLES
+   Main container for the entire editor page
    ============================================ */
 
 .modern-editor-page {
-  min-height: 100vh;
-  background: #f8f9fa;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;        /* Full viewport height - ensures page fills screen */
+  background: #f8f9fa;      /* Light gray background color */
+  display: flex;            /* Flexbox layout for vertical stacking */
+  flex-direction: column;   /* Stack children vertically (navbar, content) */
 }
 
 /* ============================================
    TOP NAVIGATION BAR
+   Sticky header with back button, title, zoom controls, and action buttons
    ============================================ */
 
 .editor-navbar {
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: white;                          /* White background for navbar */
+  border-bottom: 1px solid #e5e7eb;          /* Light gray bottom border */
+  padding: 0 24px;                           /* Horizontal padding (left/right) */
+  height: 64px;                              /* Fixed height for navbar */
+  display: flex;                             /* Flexbox for horizontal layout */
+  align-items: center;                       /* Vertically center items */
+  justify-content: space-between;            /* Space items evenly (left, center, right) */
+  position: sticky;                          /* Stick to top when scrolling */
+  top: 0;                                    /* Stick at top of viewport */
+  z-index: 100;                              /* Layer above other content */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
 }
 
+/* Left section of navbar - contains back button and title */
 .navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex: 1;
+  display: flex;           /* Flexbox for horizontal layout */
+  align-items: center;     /* Vertically center items */
+  gap: 24px;              /* Space between back button and title */
+  flex: 1;                /* Take up available space */
 }
 
+/* Back button - returns to previous page */
 .nav-back-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  display: flex;              /* Flexbox for icon + text layout */
+  align-items: center;        /* Vertically center icon and text */
+  gap: 8px;                   /* Space between icon and text */
+  padding: 8px 16px;          /* Internal spacing (top/bottom, left/right) */
+  background: transparent;     /* No background color */
+  border: 1px solid #e5e7eb;  /* Light gray border */
+  border-radius: 8px;         /* Rounded corners */
+  color: #374151;             /* Dark gray text color */
+  font-size: 14px;            /* Text size */
+  font-weight: 500;           /* Medium font weight */
+  cursor: pointer;            /* Show pointer cursor on hover */
+  transition: all 0.2s;       /* Smooth transition for hover effects */
 }
 
+/* Back button hover state */
 .nav-back-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: #f9fafb;        /* Light gray background on hover */
+  border-color: #d1d5db;      /* Darker border on hover */
 }
 
+/* Editor title heading */
 .editor-title h1 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0;
-  line-height: 1.2;
+  font-size: 18px;    /* Title text size */
+  font-weight: 600;   /* Semi-bold font weight */
+  color: #111827;     /* Very dark gray (almost black) */
+  margin: 0;          /* Remove default margin */
+  line-height: 1.2;   /* Tight line height */
 }
 
+/* Subtitle below title */
 .editor-title .subtitle {
-  font-size: 13px;
-  color: #6b7280;
-  display: block;
-  margin-top: 2px;
+  font-size: 13px;    /* Smaller text for subtitle */
+  color: #6b7280;     /* Medium gray color */
+  display: block;     /* Display as block element */
+  margin-top: 2px;    /* Small space above subtitle */
 }
 
+/* Center section of navbar - contains zoom controls */
 .navbar-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
+  display: flex;              /* Flexbox layout */
+  align-items: center;        /* Vertically center items */
+  justify-content: center;    /* Horizontally center items */
+  flex: 1;                    /* Take up available space */
 }
 
+/* Zoom controls container */
 .zoom-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f9fafb;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  display: flex;                  /* Flexbox for horizontal layout */
+  align-items: center;            /* Vertically center items */
+  gap: 8px;                       /* Space between zoom buttons */
+  background: #f9fafb;            /* Light gray background */
+  padding: 6px;                   /* Internal padding */
+  border-radius: 8px;             /* Rounded corners */
+  border: 1px solid #e5e7eb;      /* Light gray border */
 }
 
+/* Individual zoom button (zoom in, zoom out, reset) */
 .zoom-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  color: #374151;
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 32px;                    /* Fixed width */
+  height: 32px;                   /* Fixed height (square button) */
+  display: flex;                  /* Flexbox for centering icon */
+  align-items: center;            /* Vertically center icon */
+  justify-content: center;        /* Horizontally center icon */
+  background: white;              /* White background */
+  border: 1px solid #e5e7eb;      /* Light gray border */
+  border-radius: 6px;             /* Rounded corners */
+  color: #374151;                 /* Dark gray icon color */
+  cursor: pointer;                /* Show pointer cursor */
+  transition: all 0.2s;           /* Smooth transition for hover */
 }
 
 .zoom-btn:hover {
