@@ -2,7 +2,16 @@
    CLASSIC TEMPLATE STYLES
    Traditional black and white professional layout
    Features: Centered header, decorative borders, clean sections
+   Supports custom styling via CSS variables
    ============================================ */
+
+/* Apply custom styling */
+.classic-template {
+  font-family: var(--font-family, 'Segoe UI'), Tahoma, Geneva, Verdana, sans-serif;
+  font-size: var(--font-size, 14px);
+  line-height: var(--line-height, 1.5);
+  color: var(--primary-color, #1f2937);
+}
 
 /* ============================================
    HEADER SECTION
@@ -10,7 +19,7 @@
    ============================================ */
 .classic-template .resume-header {
   text-align: center;               /* Center all header content */
-  border-bottom: 2px solid #1f2937; /* Thick dark border below header */
+  border-bottom: 2px solid var(--primary-color, #1f2937); /* Thick dark border below header */
   padding-bottom: 1em;              /* Space between content and border */
   position: relative;               /* Positioning context for decorative element */
 }
@@ -24,7 +33,7 @@
   transform: translateX(-50%);      /* Center the element */
   width: 60px;                      /* Short accent line */
   height: 2px;                      /* Same thickness as border */
-  background: #1f2937;              /* Dark color matching border */
+  background: var(--primary-color, #1f2937); /* Dark color matching border */
 }
 
 /* ============================================
@@ -56,11 +65,12 @@
   text-align: center;
   position: relative;
   margin-bottom: 1.2em;
+  color: var(--primary-color, #1f2937);
 }
 
 .classic-template .section-divider {
   height: 2px;
-  background: #1f2937;
+  background: var(--primary-color, #1f2937);
   margin-bottom: 0.8em;
   position: relative;
 }
@@ -72,7 +82,7 @@
   left: 0;
   width: 40px;
   height: 100%;
-  background: #6b7280;
+  background: var(--accent-color, #6366f1);
 }
 
 .classic-template .exp-header,
@@ -131,18 +141,49 @@
   border-radius: 0.25em;
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-  .classic-template .contact-info {
-    flex-direction: column;
-    gap: 0.5em;
-  }
-
-  .classic-template .contact-info span::after {
-    display: none;
-  }
-
-  .classic-template .section-title {
-    font-size: 0.95em;
-  }
+/* ============================================
+   CUSTOM SECTIONS
+   User-added custom sections with optional subheadings
+   ============================================ */
+.classic-template .custom-section-content {
+  font-size: 14px;                /* Fixed font size */
+  line-height: 1.6;               /* Comfortable reading */
+  color: #4b5563;                 /* Medium-dark gray */
+  white-space: pre-wrap;          /* Preserve line breaks */
+  word-wrap: break-word;          /* Break long words */
+  margin-bottom: 12px;            /* Space below main content */
 }
+
+.classic-template .custom-subheadings {
+  margin-top: 8px;                /* Space above subheadings */
+}
+
+.classic-template .custom-subheading-item {
+  margin-bottom: 12px;            /* Space between subheading items */
+}
+
+.classic-template .custom-subheading-item:last-child {
+  margin-bottom: 0;               /* No margin after last item */
+}
+
+.classic-template .subheading-title-row {
+  margin-bottom: 4px;             /* Space below title */
+}
+
+.classic-template .subheading-title {
+  font-size: 15px;                /* Slightly larger than body text */
+  font-weight: 600;               /* Semi-bold */
+  color: #1f2937;                 /* Dark gray */
+  display: block;                 /* Block element */
+}
+
+.classic-template .subheading-content {
+  font-size: 14px;                /* Fixed font size */
+  line-height: 1.5;               /* Comfortable reading */
+  color: #4b5563;                 /* Medium-dark gray */
+  white-space: pre-wrap;          /* Preserve line breaks */
+  word-wrap: break-word;          /* Break long words */
+  margin-left: 0;                 /* No indentation */
+}
+
+/* No responsive adjustments - fixed layout on all devices */

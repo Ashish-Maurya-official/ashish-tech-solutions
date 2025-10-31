@@ -52,9 +52,14 @@ export default function Editor() {
     addSection, 
     removeSection,
     updateHeading,
+    toggleSectionVisibility,
+    updateStyling,
     addCustomSection,
     removeCustomSection,
-    updateCustomSection
+    updateCustomSection,
+    addSubheading,
+    removeSubheading,
+    updateSubheading
   } = useResume();
   const [activeSection, setActiveSection] = useState('personal');
   const [showSidebar, setShowSidebar] = useState(true);
@@ -230,7 +235,10 @@ export default function Editor() {
                   { id: 'experience', icon: '💼', label: 'Experience' },
                   { id: 'education', icon: '🎓', label: 'Education' },
                   { id: 'skills', icon: '⚡', label: 'Skills' },
-                  { id: 'custom', icon: '✨', label: 'Custom' }
+                  { id: 'links', icon: '🔗', label: 'Links' },
+                  { id: 'style', icon: '🎨', label: 'Style' },
+                  { id: 'manage', icon: '⚙️', label: 'Manage' },
+                  { id: 'custom', icon: '➕', label: 'Add Sections' }
                 ].map((section) => (
                   <button
                     key={section.id}
@@ -452,115 +460,356 @@ export default function Editor() {
                 </div>
               )}
 
+              {activeSection === 'links' && (
+                <div className="modern-form-section">
+                  <div className="section-header-modern">
+                    <div>
+                      <h3>Links</h3>
+                      <p className="section-description">Add portfolio, blog, or other professional links</p>
+                    </div>
+                    <button
+                      className="add-btn-modern"
+                      onClick={() => addSection('links', {
+                        label: '',
+                        url: ''
+                      })}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 3V13M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span>Add</span>
+                    </button>
+                  </div>
+                  {(resumeData.links || []).map((link, index) => (
+                    <div key={index} className="modern-form-group">
+                      <div className="group-header-modern">
+                        <span className="group-number">{index + 1}</span>
+                        <span className="group-title">Link {index + 1}</span>
+                        {(resumeData.links || []).length > 1 && (
+                          <button
+                            className="remove-btn-modern"
+                            onClick={() => removeSection('links', index)}
+                            title="Remove"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                      <EditableField
+                        value={link.label}
+                        onChange={(value) => updateField(`links.${index}.label`, value)}
+                        placeholder="Link Label (e.g., Portfolio, Blog)"
+                      />
+                      <EditableField
+                        value={link.url}
+                        onChange={(value) => updateField(`links.${index}.url`, value)}
+                        placeholder="URL (e.g., https://yourwebsite.com)"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeSection === 'style' && (
+                <div className="modern-form-section">
+                  <div className="section-header-modern">
+                    <div>
+                      <h3>Style Customization</h3>
+                      <p className="section-description">Customize colors, fonts, and spacing</p>
+                    </div>
+                  </div>
+
+                  {/* Colors */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Colors</h4>
+                    
+                    <div className="style-option">
+                      <label>Primary Color (Text & Borders)</label>
+                      <div className="color-picker-row">
+                        <input
+                          type="color"
+                          value={resumeData.styling?.primaryColor || '#1f2937'}
+                          onChange={(e) => updateStyling('primaryColor', e.target.value)}
+                          className="color-input"
+                        />
+                        <input
+                          type="text"
+                          value={resumeData.styling?.primaryColor || '#1f2937'}
+                          onChange={(e) => updateStyling('primaryColor', e.target.value)}
+                          className="color-text-input"
+                          placeholder="#1f2937"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Accent Color (Highlights)</label>
+                      <div className="color-picker-row">
+                        <input
+                          type="color"
+                          value={resumeData.styling?.accentColor || '#6366f1'}
+                          onChange={(e) => updateStyling('accentColor', e.target.value)}
+                          className="color-input"
+                        />
+                        <input
+                          type="text"
+                          value={resumeData.styling?.accentColor || '#6366f1'}
+                          onChange={(e) => updateStyling('accentColor', e.target.value)}
+                          className="color-text-input"
+                          placeholder="#6366f1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Typography */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Typography</h4>
+                    
+                    <div className="style-option">
+                      <label>Font Family</label>
+                      <select
+                        value={resumeData.styling?.fontFamily || 'Segoe UI'}
+                        onChange={(e) => updateStyling('fontFamily', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="Segoe UI">Segoe UI (Default)</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Tahoma">Tahoma</option>
+                      </select>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Font Size</label>
+                      <select
+                        value={resumeData.styling?.fontSize || 'medium'}
+                        onChange={(e) => updateStyling('fontSize', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="small">Small (12px)</option>
+                        <option value="medium">Medium (14px)</option>
+                        <option value="large">Large (16px)</option>
+                      </select>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Line Height</label>
+                      <select
+                        value={resumeData.styling?.lineHeight || 'normal'}
+                        onChange={(e) => updateStyling('lineHeight', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="compact">Compact (1.3)</option>
+                        <option value="normal">Normal (1.5)</option>
+                        <option value="relaxed">Relaxed (1.7)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Spacing */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Spacing</h4>
+                    
+                    <div className="style-option">
+                      <label>Section Spacing</label>
+                      <select
+                        value={resumeData.styling?.sectionSpacing || 'normal'}
+                        onChange={(e) => updateStyling('sectionSpacing', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="compact">Compact</option>
+                        <option value="normal">Normal</option>
+                        <option value="spacious">Spacious</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Reset Button */}
+                  <button
+                    className="reset-style-btn"
+                    onClick={() => {
+                      updateStyling('primaryColor', '#1f2937');
+                      updateStyling('accentColor', '#6366f1');
+                      updateStyling('fontFamily', 'Segoe UI');
+                      updateStyling('fontSize', 'medium');
+                      updateStyling('lineHeight', 'normal');
+                      updateStyling('sectionSpacing', 'normal');
+                    }}
+                  >
+                    Reset to Default
+                  </button>
+                </div>
+              )}
+
+              {activeSection === 'manage' && (
+                <div className="modern-form-section">
+                  <div className="section-header-modern">
+                    <div>
+                      <h3>Manage Sections</h3>
+                      <p className="section-description">Show/hide sections and edit their headings</p>
+                    </div>
+                  </div>
+
+                  <div className="manage-sections-list">
+                    {[
+                      { id: 'summary', label: 'Summary', icon: '📝' },
+                      { id: 'experience', label: 'Experience', icon: '💼' },
+                      { id: 'education', label: 'Education', icon: '🎓' },
+                      { id: 'projects', label: 'Projects', icon: '🚀' },
+                      { id: 'skills', label: 'Skills', icon: '⚡' },
+                      { id: 'languages', label: 'Languages', icon: '🌐' },
+                      { id: 'links', label: 'Links', icon: '🔗' }
+                    ].map((section) => (
+                      <div key={section.id} className="manage-section-item">
+                        <div className="manage-section-header">
+                          <div className="section-info">
+                            <span className="section-icon">{section.icon}</span>
+                            <span className="section-name">{section.label}</span>
+                          </div>
+                          <label className="toggle-switch">
+                            <input
+                              type="checkbox"
+                              checked={resumeData.sectionVisibility?.[section.id] !== false}
+                              onChange={() => toggleSectionVisibility(section.id)}
+                            />
+                            <span className="toggle-slider"></span>
+                          </label>
+                        </div>
+                        {resumeData.sectionVisibility?.[section.id] !== false && (
+                          <div className="section-heading-editor">
+                            <label>Section Heading:</label>
+                            <input
+                              type="text"
+                              value={resumeData.headings?.[section.id] || section.label}
+                              onChange={(e) => updateHeading(section.id, e.target.value)}
+                              placeholder={`${section.label} heading`}
+                              className="editable-field"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {activeSection === 'custom' && (
                 <div className="modern-form-section">
                   <div className="section-header-modern">
                     <div>
-                      <h3>Custom Sections & Headings</h3>
-                      <p className="section-description">Customize section headings and add custom sections</p>
+                      <h3>Add Custom Sections</h3>
+                      <p className="section-description">Add certifications, awards, publications, or any custom section</p>
                     </div>
+                    <button
+                      className="add-btn-modern"
+                      onClick={addCustomSection}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 3V13M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span>Add Section</span>
+                    </button>
                   </div>
 
-                  {/* Editable Section Headings */}
-                  <div className="headings-editor">
-                    <h4 className="subsection-title">Section Headings</h4>
-                    <p className="subsection-description">Click on any heading in the preview to edit it</p>
-                    <div className="headings-grid">
-                      <div className="heading-item">
-                        <label>Summary Section</label>
-                        <input
-                          type="text"
-                          value={resumeData.headings?.summary || 'Summary'}
-                          onChange={(e) => updateHeading('summary', e.target.value)}
-                          className="editable-field"
-                        />
-                      </div>
-                      <div className="heading-item">
-                        <label>Experience Section</label>
-                        <input
-                          type="text"
-                          value={resumeData.headings?.experience || 'Work Experience'}
-                          onChange={(e) => updateHeading('experience', e.target.value)}
-                          className="editable-field"
-                        />
-                      </div>
-                      <div className="heading-item">
-                        <label>Education Section</label>
-                        <input
-                          type="text"
-                          value={resumeData.headings?.education || 'Education'}
-                          onChange={(e) => updateHeading('education', e.target.value)}
-                          className="editable-field"
-                        />
-                      </div>
-                      <div className="heading-item">
-                        <label>Skills Section</label>
-                        <input
-                          type="text"
-                          value={resumeData.headings?.skills || 'Skills'}
-                          onChange={(e) => updateHeading('skills', e.target.value)}
-                          className="editable-field"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  {resumeData.customSections && resumeData.customSections.length > 0 ? (
+                    <div className="custom-sections-list">
+                      {resumeData.customSections.map((section) => (
+                        <div key={section.id} className="custom-section-item">
+                          <div className="custom-section-header">
+                            <input
+                              type="text"
+                              value={section.title}
+                              onChange={(e) => updateCustomSection(section.id, 'title', e.target.value)}
+                              placeholder="Section Title (e.g., Certifications, Awards)"
+                              className="editable-field"
+                            />
+                            <button
+                              className="remove-btn-modern"
+                              onClick={() => removeCustomSection(section.id)}
+                              title="Remove Section"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                              </svg>
+                            </button>
+                          </div>
+                          
+                          <textarea
+                            value={section.content}
+                            onChange={(e) => updateCustomSection(section.id, 'content', e.target.value)}
+                            placeholder="Main content (optional)..."
+                            className="editable-field"
+                            rows="3"
+                          />
 
-                  {/* Custom Sections */}
-                  <div className="custom-sections-editor">
-                    <div className="section-header-modern">
-                      <div>
-                        <h4 className="subsection-title">Custom Sections</h4>
-                        <p className="subsection-description">Add additional sections to your resume</p>
-                      </div>
-                      <button
-                        className="add-btn-modern"
-                        onClick={addCustomSection}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M8 3V13M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                        <span>Add Section</span>
-                      </button>
-                    </div>
-
-                    {resumeData.customSections && resumeData.customSections.length > 0 ? (
-                      <div className="custom-sections-list">
-                        {resumeData.customSections.map((section) => (
-                          <div key={section.id} className="custom-section-item">
-                            <div className="custom-section-header">
-                              <input
-                                type="text"
-                                value={section.title}
-                                onChange={(e) => updateCustomSection(section.id, 'title', e.target.value)}
-                                placeholder="Section Title"
-                                className="editable-field"
-                              />
+                          {/* Subheadings */}
+                          <div className="subheadings-container">
+                            <div className="subheading-header">
+                              <span className="subheading-label">Subheadings (optional)</span>
                               <button
-                                className="remove-btn-modern"
-                                onClick={() => removeCustomSection(section.id)}
-                                title="Remove Section"
+                                className="add-subheading-btn"
+                                onClick={() => addSubheading(section.id)}
+                                title="Add Subheading"
                               >
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                  <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                  <path d="M7 2V12M2 7H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
+                                <span>Add Item</span>
                               </button>
                             </div>
-                            <textarea
-                              value={section.content}
-                              onChange={(e) => updateCustomSection(section.id, 'content', e.target.value)}
-                              placeholder="Section content..."
-                              className="editable-field"
-                              rows="4"
-                            />
+
+                            {section.subheadings && section.subheadings.length > 0 && (
+                              <div className="subheadings-list">
+                                {section.subheadings.map((subheading) => (
+                                  <div key={subheading.id} className="subheading-item">
+                                    <div className="subheading-item-header">
+                                      <input
+                                        type="text"
+                                        value={subheading.title}
+                                        onChange={(e) => updateSubheading(section.id, subheading.id, 'title', e.target.value)}
+                                        placeholder="Item title"
+                                        className="editable-field subheading-title-input"
+                                      />
+                                      <button
+                                        className="remove-subheading-btn"
+                                        onClick={() => removeSubheading(section.id, subheading.id)}
+                                        title="Remove Item"
+                                      >
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                          <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        </svg>
+                                      </button>
+                                    </div>
+                                    <textarea
+                                      value={subheading.content}
+                                      onChange={(e) => updateSubheading(section.id, subheading.id, 'content', e.target.value)}
+                                      placeholder="Item details..."
+                                      className="editable-field"
+                                      rows="2"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="empty-state">
-                        <p>No custom sections yet. Click "Add Section" to create one.</p>
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-state">
+                      <p>No custom sections yet. Click "Add Section" to create one.</p>
+                      <p style={{ fontSize: '13px', color: '#9ca3af', marginTop: '8px' }}>
+                        Examples: Certifications, Awards, Publications, Volunteer Work
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

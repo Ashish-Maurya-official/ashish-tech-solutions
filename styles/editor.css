@@ -1593,3 +1593,330 @@ textarea.inline-edit-input {
 .editable-heading:hover {
   background: rgba(99, 102, 241, 0.1);
 }
+
+
+/* ============================================
+   SUBHEADINGS UI
+   UI for adding and managing subheadings in custom sections
+   ============================================ */
+.subheadings-container {
+  margin-top: 16px;                   /* Space above subheadings container */
+  padding-top: 16px;                  /* Internal top padding */
+  border-top: 1px solid #e5e7eb;      /* Top border separator */
+}
+
+.subheading-header {
+  display: flex;                      /* Flexbox layout */
+  justify-content: space-between;     /* Space between label and button */
+  align-items: center;                /* Vertically center items */
+  margin-bottom: 12px;                /* Space below header */
+}
+
+.subheading-label {
+  font-size: 13px;                    /* Small label text */
+  font-weight: 500;                   /* Medium weight */
+  color: #6b7280;                     /* Medium gray */
+}
+
+.add-subheading-btn {
+  display: flex;                      /* Flexbox for icon + text */
+  align-items: center;                /* Vertically center */
+  gap: 4px;                           /* Space between icon and text */
+  padding: 6px 12px;                  /* Internal padding */
+  background: #f3f4f6;                /* Light gray background */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 6px;                 /* Rounded corners */
+  color: #374151;                     /* Dark gray text */
+  font-size: 12px;                    /* Small text */
+  font-weight: 500;                   /* Medium weight */
+  cursor: pointer;                    /* Pointer cursor */
+  transition: all 0.2s;               /* Smooth transition */
+}
+
+.add-subheading-btn:hover {
+  background: #e5e7eb;                /* Darker on hover */
+  border-color: #d1d5db;              /* Darker border on hover */
+}
+
+.subheadings-list {
+  display: flex;                      /* Flexbox layout */
+  flex-direction: column;             /* Stack vertically */
+  gap: 12px;                          /* Space between items */
+}
+
+.subheading-item {
+  background: #f9fafb;                /* Light background */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 8px;                 /* Rounded corners */
+  padding: 12px;                      /* Internal padding */
+}
+
+.subheading-item-header {
+  display: flex;                      /* Flexbox layout */
+  gap: 8px;                           /* Space between input and button */
+  margin-bottom: 8px;                 /* Space below header */
+}
+
+.subheading-title-input {
+  flex: 1;                            /* Take up available space */
+  font-weight: 500;                   /* Medium weight */
+  margin-bottom: 0 !important;        /* Override default margin */
+}
+
+.remove-subheading-btn {
+  width: 28px;                        /* Fixed width */
+  height: 28px;                       /* Fixed height (square) */
+  display: flex;                      /* Flexbox for centering */
+  align-items: center;                /* Vertically center icon */
+  justify-content: center;            /* Horizontally center icon */
+  background: white;                  /* White background */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 6px;                 /* Rounded corners */
+  color: #ef4444;                     /* Red color */
+  cursor: pointer;                    /* Pointer cursor */
+  transition: all 0.2s;               /* Smooth transition */
+  flex-shrink: 0;                     /* Don't shrink */
+}
+
+.remove-subheading-btn:hover {
+  background: #fef2f2;                /* Light red background on hover */
+  border-color: #fecaca;              /* Red border on hover */
+}
+
+
+/* ============================================
+   MANAGE SECTIONS UI
+   UI for showing/hiding sections and editing headings
+   ============================================ */
+.manage-sections-list {
+  display: flex;                      /* Flexbox layout */
+  flex-direction: column;             /* Stack vertically */
+  gap: 12px;                          /* Space between items */
+}
+
+.manage-section-item {
+  background: #f9fafb;                /* Light background */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 12px;                /* Rounded corners */
+  padding: 16px;                      /* Internal padding */
+  transition: all 0.2s;               /* Smooth transition */
+}
+
+.manage-section-item:hover {
+  border-color: #d1d5db;              /* Darker border on hover */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  /* Subtle shadow */
+}
+
+.manage-section-header {
+  display: flex;                      /* Flexbox layout */
+  justify-content: space-between;     /* Space between info and toggle */
+  align-items: center;                /* Vertically center */
+  margin-bottom: 12px;                /* Space below header */
+}
+
+.section-info {
+  display: flex;                      /* Flexbox layout */
+  align-items: center;                /* Vertically center */
+  gap: 12px;                          /* Space between icon and name */
+}
+
+.section-icon {
+  font-size: 20px;                    /* Icon size */
+  width: 32px;                        /* Fixed width */
+  height: 32px;                       /* Fixed height */
+  display: flex;                      /* Flexbox for centering */
+  align-items: center;                /* Vertically center */
+  justify-content: center;            /* Horizontally center */
+  background: white;                  /* White background */
+  border-radius: 8px;                 /* Rounded corners */
+  border: 1px solid #e5e7eb;          /* Light border */
+}
+
+.section-name {
+  font-size: 15px;                    /* Text size */
+  font-weight: 600;                   /* Semi-bold */
+  color: #111827;                     /* Dark text */
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;                 /* Positioning context */
+  display: inline-block;              /* Inline block */
+  width: 48px;                        /* Switch width */
+  height: 26px;                       /* Switch height */
+  cursor: pointer;                    /* Pointer cursor */
+}
+
+.toggle-switch input {
+  opacity: 0;                         /* Hide checkbox */
+  width: 0;                           /* No width */
+  height: 0;                          /* No height */
+}
+
+.toggle-slider {
+  position: absolute;                 /* Absolute positioning */
+  top: 0;                             /* Align to top */
+  left: 0;                            /* Align to left */
+  right: 0;                           /* Align to right */
+  bottom: 0;                          /* Align to bottom */
+  background-color: #d1d5db;          /* Gray background (off state) */
+  border-radius: 26px;                /* Fully rounded */
+  transition: 0.3s;                   /* Smooth transition */
+}
+
+.toggle-slider:before {
+  position: absolute;                 /* Absolute positioning */
+  content: "";                        /* Empty content */
+  height: 20px;                       /* Circle height */
+  width: 20px;                        /* Circle width */
+  left: 3px;                          /* Left position */
+  bottom: 3px;                        /* Bottom position */
+  background-color: white;            /* White circle */
+  border-radius: 50%;                 /* Fully rounded */
+  transition: 0.3s;                   /* Smooth transition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);  /* Shadow for depth */
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);  /* Purple gradient (on state) */
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(22px);        /* Move circle to right */
+}
+
+.section-heading-editor {
+  margin-top: 12px;                   /* Space above editor */
+  padding-top: 12px;                  /* Internal top padding */
+  border-top: 1px solid #e5e7eb;      /* Top border separator */
+}
+
+.section-heading-editor label {
+  display: block;                     /* Block element */
+  font-size: 13px;                    /* Small text */
+  font-weight: 500;                   /* Medium weight */
+  color: #6b7280;                     /* Medium gray */
+  margin-bottom: 8px;                 /* Space below label */
+}
+
+.section-heading-editor .editable-field {
+  margin-bottom: 0;                   /* No bottom margin */
+}
+
+
+/* ============================================
+   STYLE CUSTOMIZATION UI
+   UI for customizing colors, fonts, and spacing
+   ============================================ */
+.style-group {
+  margin-bottom: 24px;                /* Space between style groups */
+  padding-bottom: 24px;               /* Internal bottom padding */
+  border-bottom: 1px solid #e5e7eb;   /* Bottom border separator */
+}
+
+.style-group:last-child {
+  border-bottom: none;                /* No border after last group */
+  margin-bottom: 0;                   /* No margin after last group */
+}
+
+.style-group-title {
+  font-size: 15px;                    /* Group title size */
+  font-weight: 600;                   /* Semi-bold */
+  color: #111827;                     /* Dark text */
+  margin: 0 0 16px 0;                 /* Space below title */
+}
+
+.style-option {
+  margin-bottom: 16px;                /* Space between options */
+}
+
+.style-option:last-child {
+  margin-bottom: 0;                   /* No margin after last option */
+}
+
+.style-option label {
+  display: block;                     /* Block element */
+  font-size: 13px;                    /* Small label text */
+  font-weight: 500;                   /* Medium weight */
+  color: #374151;                     /* Dark gray */
+  margin-bottom: 8px;                 /* Space below label */
+}
+
+.color-picker-row {
+  display: flex;                      /* Flexbox layout */
+  gap: 12px;                          /* Space between inputs */
+  align-items: center;                /* Vertically center */
+}
+
+.color-input {
+  width: 60px;                        /* Fixed width for color picker */
+  height: 40px;                       /* Fixed height */
+  border: 2px solid #e5e7eb;          /* Light border */
+  border-radius: 8px;                 /* Rounded corners */
+  cursor: pointer;                    /* Pointer cursor */
+  padding: 4px;                       /* Internal padding */
+  background: white;                  /* White background */
+}
+
+.color-input:hover {
+  border-color: #6366f1;              /* Purple border on hover */
+}
+
+.color-text-input {
+  flex: 1;                            /* Take remaining space */
+  padding: 10px 14px;                 /* Internal padding */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 8px;                 /* Rounded corners */
+  font-size: 14px;                    /* Text size */
+  font-family: 'Courier New', monospace; /* Monospace for hex codes */
+  color: #111827;                     /* Dark text */
+  background: white;                  /* White background */
+  transition: all 0.2s;               /* Smooth transition */
+}
+
+.color-text-input:focus {
+  outline: none;                      /* Remove default outline */
+  border-color: #6366f1;              /* Purple border on focus */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); /* Purple glow */
+}
+
+.style-select {
+  width: 100%;                        /* Full width */
+  padding: 10px 14px;                 /* Internal padding */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 8px;                 /* Rounded corners */
+  font-size: 14px;                    /* Text size */
+  color: #111827;                     /* Dark text */
+  background: white;                  /* White background */
+  cursor: pointer;                    /* Pointer cursor */
+  transition: all 0.2s;               /* Smooth transition */
+}
+
+.style-select:hover {
+  border-color: #d1d5db;              /* Darker border on hover */
+}
+
+.style-select:focus {
+  outline: none;                      /* Remove default outline */
+  border-color: #6366f1;              /* Purple border on focus */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); /* Purple glow */
+}
+
+.reset-style-btn {
+  width: 100%;                        /* Full width */
+  padding: 12px 20px;                 /* Internal padding */
+  background: #f3f4f6;                /* Light gray background */
+  border: 1px solid #e5e7eb;          /* Light border */
+  border-radius: 8px;                 /* Rounded corners */
+  color: #374151;                     /* Dark gray text */
+  font-size: 14px;                    /* Text size */
+  font-weight: 500;                   /* Medium weight */
+  cursor: pointer;                    /* Pointer cursor */
+  transition: all 0.2s;               /* Smooth transition */
+  margin-top: 24px;                   /* Space above button */
+}
+
+.reset-style-btn:hover {
+  background: #e5e7eb;                /* Darker on hover */
+  border-color: #d1d5db;              /* Darker border on hover */
+}

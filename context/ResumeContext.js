@@ -17,7 +17,27 @@ const sampleData = {
     education: 'Education',
     skills: 'Technical Skills',
     projects: 'Key Projects',
-    languages: 'Languages'
+    languages: 'Languages',
+    links: 'Links'
+  },
+  // Section visibility (which sections to show)
+  sectionVisibility: {
+    summary: true,
+    experience: true,
+    education: true,
+    skills: true,
+    projects: true,
+    languages: true,
+    links: true
+  },
+  // Style customization
+  styling: {
+    primaryColor: '#1f2937',
+    accentColor: '#6366f1',
+    fontFamily: 'Segoe UI',
+    fontSize: 'medium',
+    lineHeight: 'normal',
+    sectionSpacing: 'normal'
   },
   // Ensure arrays exist for optional sections
   experience: resumeData.experience || [],
@@ -25,6 +45,7 @@ const sampleData = {
   education: resumeData.education || [],
   skills: resumeData.skills || [],
   languages: resumeData.languages || [],
+  links: resumeData.links || [],
   customSections: []
 };
 
@@ -69,6 +90,26 @@ export function ResumeProvider({ children }) {
     }));
   };
 
+  const toggleSectionVisibility = (section) => {
+    setResumeData(prev => ({
+      ...prev,
+      sectionVisibility: {
+        ...prev.sectionVisibility,
+        [section]: !prev.sectionVisibility[section]
+      }
+    }));
+  };
+
+  const updateStyling = (property, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      styling: {
+        ...prev.styling,
+        [property]: value
+      }
+    }));
+  };
+
   const addCustomSection = () => {
     setResumeData(prev => ({
       ...prev,
@@ -77,9 +118,61 @@ export function ResumeProvider({ children }) {
         {
           id: Date.now(),
           title: 'New Section',
-          content: 'Add your content here...'
+          content: 'Add your content here...',
+          subheadings: []  // Array to store subheadings
         }
       ]
+    }));
+  };
+
+  const addSubheading = (sectionId) => {
+    setResumeData(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              subheadings: [
+                ...(section.subheadings || []),
+                {
+                  id: Date.now(),
+                  title: 'Subheading',
+                  content: 'Add details here...'
+                }
+              ]
+            }
+          : section
+      )
+    }));
+  };
+
+  const removeSubheading = (sectionId, subheadingId) => {
+    setResumeData(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              subheadings: (section.subheadings || []).filter(sub => sub.id !== subheadingId)
+            }
+          : section
+      )
+    }));
+  };
+
+  const updateSubheading = (sectionId, subheadingId, field, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              subheadings: (section.subheadings || []).map(sub =>
+                sub.id === subheadingId ? { ...sub, [field]: value } : sub
+              )
+            }
+          : section
+      )
     }));
   };
 
@@ -109,9 +202,14 @@ export function ResumeProvider({ children }) {
       addSection,
       removeSection,
       updateHeading,
+      toggleSectionVisibility,
+      updateStyling,
       addCustomSection,
       removeCustomSection,
       updateCustomSection,
+      addSubheading,
+      removeSubheading,
+      updateSubheading,
       sampleData
     }}>
       {children}
