@@ -18,7 +18,8 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* BetterCV Layout */
+/* AT Solutions Layout */
+.at-solutions-layout,
 .bettercv-layout {
   min-height: 100vh;
   background: #ffffff;
@@ -634,7 +635,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* Responsive Design for BetterCV Layout */
+/* Responsive Design for AT Solutions Layout */
 
 /* Large tablets and small desktops */
 @media (max-width: 1024px) {

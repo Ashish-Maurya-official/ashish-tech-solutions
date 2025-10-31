@@ -26,9 +26,11 @@ export default function App({ Component, pageProps }) {
     <ResumeProvider>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta name="theme-color" content="#1e3c72" />
+        <meta name="theme-color" content="#6366f1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
       </Head>
       <Component {...pageProps} />
     </ResumeProvider>

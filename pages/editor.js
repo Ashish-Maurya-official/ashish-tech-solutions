@@ -117,7 +117,7 @@ export default function Editor() {
   return (
     <>
       <Head>
-        <title>Resume Editor - BetterCV</title>
+        <title>Resume Editor - AT Solutions</title>
         <meta name="description" content="Edit your professional resume with our intuitive editor." />
       </Head>
       <main className="modern-editor-page">

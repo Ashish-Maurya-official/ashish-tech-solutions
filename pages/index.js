@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Logo from '../components/Logo';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,17 +18,16 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>BetterCV - Create Professional Resumes That Get You Hired</title>
+        <title>AT Solutions - Create Professional Resumes That Get You Hired</title>
         <meta name="description" content="Build a beautiful, professional resume in minutes with our easy-to-use builder. Choose from expert-designed templates and get hired faster." />
       </Head>
-      <div className="bettercv-layout">
+      <div className="at-solutions-layout">
         {/* Navigation Header */}
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="nav-brand">
             <Link href="/" className="brand-logo">
-              <span className="logo-icon">📄</span>
-              <span className="brand-text">BetterCV</span>
+              <Logo size="medium" showText={true} />
             </Link>
           </div>
           
@@ -322,10 +322,7 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-container">
           <div className="footer-brand">
-            <div className="brand-logo">
-              <span className="logo-icon">📄</span>
-              <span className="brand-text">BetterCV</span>
-            </div>
+            <Logo size="large" showText={true} />
             <p>Create professional resumes that get you hired.</p>
           </div>
           
@@ -355,7 +352,7 @@ export default function Home() {
         
         <div className="footer-bottom">
           <div className="footer-container">
-            <p>&copy; 2024 BetterCV. All rights reserved.</p>
+            <p>&copy; 2024 AT Solutions. All rights reserved.</p>
           </div>
         </div>
       </footer>

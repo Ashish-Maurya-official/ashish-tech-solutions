@@ -1,4 +1,4 @@
-# 🚀 Futuristic Resume Builder
+# 🚀 AT Solutions - Resume Builder
 
 A modern, interactive resume builder with multiple professional templates, inline editing, and PDF export capabilities.
 
@@ -35,7 +35,7 @@ A modern, interactive resume builder with multiple professional templates, inlin
 git clone <repository-url>
 
 # Navigate to project directory
-cd futuristic-resume-builder
+cd at-solutions-resume-builder
 
 # Install dependencies
 npm install
@@ -51,7 +51,7 @@ Visit `http://localhost:3000` in your browser.
 ## 📁 Project Structure
 
 ```
-futuristic-resume-builder/
+at-solutions-resume-builder/
 ├── components/           # React components (co-located with styles)
 │   ├── InlineEditableResume/
 │   ├── ResumePreview/
@@ -267,6 +267,6 @@ Give a ⭐️ if this project helped you!
 
 ---
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by AT Solutions**
 
 **Version 2.0** | **Last Updated: 2024**

@@ -55,7 +55,7 @@ export default function Select() {
   return (
     <>
       <Head>
-        <title>Choose Your Resume Template - BetterCV</title>
+        <title>Choose Your Resume Template - AT Solutions</title>
         <meta name="description" content="Select from 12 professional resume templates designed by experts." />
       </Head>
       <main className="select-page">

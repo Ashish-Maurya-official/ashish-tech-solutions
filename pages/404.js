@@ -5,7 +5,7 @@ export default function Custom404() {
   return (
     <>
       <Head>
-        <title>Page Not Found - BetterCV</title>
+        <title>Page Not Found - AT Solutions</title>
       </Head>
       <div style={{
         minHeight: '100vh',
