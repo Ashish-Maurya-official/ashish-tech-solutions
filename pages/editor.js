@@ -6,6 +6,7 @@ import html2canvas from 'html2canvas';
 import Head from 'next/head';
 import ResumePreview from '../components/ResumePreview';
 import InlineEditableResume from '../components/InlineEditableResume';
+
 import { templates } from '../components/templates';
 
 const resumeDesigns = Object.values(templates);
@@ -47,7 +48,9 @@ export default function Editor() {
   const { 
     resumeData, 
     selectedDesign, 
-    setSelectedDesign, 
+    setSelectedDesign,
+    selectedComponent,
+    setSelectedComponent,
     updateField, 
     addSection, 
     removeSection,
@@ -69,6 +72,524 @@ export default function Editor() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const resumeRef = useRef();
   const printRef = useRef();
+
+  // Handle component click for styling - Switch to style tab
+  const handleComponentClick = (componentInfo, event) => {
+    event.stopPropagation();
+    setSelectedComponent(componentInfo);
+    setActiveSection('style'); // Switch to style tab
+    if (isMobile) {
+      setShowSidebar(true); // Show sidebar on mobile
+    }
+  };
+
+  // Handle delete element
+  const handleDeleteElement = (componentInfo) => {
+    if (!componentInfo) return;
+
+    // Handle different types of deletions
+    if (componentInfo.section === 'experience' && componentInfo.index !== undefined) {
+      removeSection('experience', componentInfo.index);
+    } else if (componentInfo.section === 'education' && componentInfo.index !== undefined) {
+      removeSection('education', componentInfo.index);
+    } else if (componentInfo.section === 'projects' && componentInfo.index !== undefined) {
+      removeSection('projects', componentInfo.index);
+    } else if (componentInfo.section === 'links' && componentInfo.index !== undefined) {
+      removeSection('links', componentInfo.index);
+    } else if (componentInfo.section === 'customSections' && componentInfo.sectionId) {
+      removeCustomSection(componentInfo.sectionId);
+    } else if (componentInfo.section === 'customSubheading' && componentInfo.sectionId && componentInfo.subheadingId) {
+      removeSubheading(componentInfo.sectionId, componentInfo.subheadingId);
+    }
+    
+    // Clear selection after delete
+    setSelectedComponent(null);
+  };
+
+  // Get display name for component
+  const getComponentDisplayName = (component) => {
+    if (!component || !component.type) return 'Component';
+    
+    const typeNames = {
+      'name': 'Name',
+      'title': 'Job Title',
+      'contactInfo': 'Contact Info',
+      'sectionTitle': 'Section Title',
+      'divider': 'Divider',
+      'summaryText': 'Summary Text',
+      'experienceItem': 'Experience Item',
+      'educationItem': 'Education Item',
+      'projectItem': 'Project Item',
+      'skillsList': 'Skills List',
+      'sectionContainer': 'Section Container'
+    };
+    
+    return typeNames[component.type] || component.type;
+  };
+
+  // Render component-specific style options
+  const renderComponentStyleOptions = (component) => {
+    if (!component || !component.type) return null;
+
+    const styling = resumeData.styling || {};
+
+    switch (component.type) {
+      case 'name':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Name Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="24"
+                    max="48"
+                    value={styling.headingSize || 32}
+                    onChange={(e) => updateStyling('headingSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.headingSize || 32}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.primaryColor || '#1f2937'}
+                    onChange={(e) => updateStyling('primaryColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.primaryColor || '#1f2937'}
+                    onChange={(e) => updateStyling('primaryColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Font Family</label>
+                <select
+                  value={styling.fontFamily || 'Segoe UI'}
+                  onChange={(e) => updateStyling('fontFamily', e.target.value)}
+                  className="style-select"
+                >
+                  <option value="Segoe UI">Segoe UI</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Helvetica">Helvetica</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'title':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Job Title Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="14"
+                    max="24"
+                    value={styling.titleSize || 18}
+                    onChange={(e) => updateStyling('titleSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.titleSize || 18}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.titleColor || '#1f2937'}
+                    onChange={(e) => updateStyling('titleColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.titleColor || '#1f2937'}
+                    onChange={(e) => updateStyling('titleColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'sectionTitle':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Section Title Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="12"
+                    max="24"
+                    value={styling.sectionTitleSize || 16}
+                    onChange={(e) => updateStyling('sectionTitleSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.sectionTitleSize || 16}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.sectionTitleColor || '#1f2937'}
+                    onChange={(e) => updateStyling('sectionTitleColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.sectionTitleColor || '#1f2937'}
+                    onChange={(e) => updateStyling('sectionTitleColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Weight</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="400"
+                    max="900"
+                    step="100"
+                    value={styling.sectionTitleWeight || 600}
+                    onChange={(e) => updateStyling('sectionTitleWeight', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.sectionTitleWeight || 600}</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Text Transform</label>
+                <select
+                  value={styling.sectionTitleTransform || 'uppercase'}
+                  onChange={(e) => updateStyling('sectionTitleTransform', e.target.value)}
+                  className="style-select"
+                >
+                  <option value="uppercase">UPPERCASE</option>
+                  <option value="lowercase">lowercase</option>
+                  <option value="capitalize">Capitalize</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'divider':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Divider Styling</h4>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.dividerColor || '#1f2937'}
+                    onChange={(e) => updateStyling('dividerColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.dividerColor || '#1f2937'}
+                    onChange={(e) => updateStyling('dividerColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Style</label>
+                <select
+                  value={styling.dividerStyle || 'solid'}
+                  onChange={(e) => updateStyling('dividerStyle', e.target.value)}
+                  className="style-select"
+                >
+                  <option value="solid">Solid</option>
+                  <option value="dashed">Dashed</option>
+                  <option value="dotted">Dotted</option>
+                  <option value="double">Double</option>
+                </select>
+              </div>
+              <div className="style-option">
+                <label>Thickness</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    value={styling.dividerThickness || 2}
+                    onChange={(e) => updateStyling('dividerThickness', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.dividerThickness || 2}px</span>
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'summaryText':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Text Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="12"
+                    max="18"
+                    value={styling.summarySize || 14}
+                    onChange={(e) => updateStyling('summarySize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.summarySize || 14}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Line Height</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="1.2"
+                    max="2"
+                    step="0.1"
+                    value={styling.lineHeight || 1.5}
+                    onChange={(e) => updateStyling('lineHeight', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.lineHeight || 1.5}</span>
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'contactInfo':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Contact Info Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="11"
+                    max="16"
+                    value={styling.contactSize || 14}
+                    onChange={(e) => updateStyling('contactSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.contactSize || 14}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.contactColor || '#1f2937'}
+                    onChange={(e) => updateStyling('contactColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.contactColor || '#1f2937'}
+                    onChange={(e) => updateStyling('contactColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'experienceItem':
+      case 'educationItem':
+      case 'projectItem':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Item Styling</h4>
+              <div className="style-option">
+                <label>Text Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="11"
+                    max="16"
+                    value={styling.itemTextSize || 14}
+                    onChange={(e) => updateStyling('itemTextSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.itemTextSize || 14}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Text Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Title Weight</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="400"
+                    max="900"
+                    step="100"
+                    value={styling.itemTitleWeight || 600}
+                    onChange={(e) => updateStyling('itemTitleWeight', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.itemTitleWeight || 600}</span>
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'skillsList':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">List Styling</h4>
+              <div className="style-option">
+                <label>Size</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="11"
+                    max="16"
+                    value={styling.skillsSize || 14}
+                    onChange={(e) => updateStyling('skillsSize', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.skillsSize || 14}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Color</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.textColor || '#1f2937'}
+                    onChange={(e) => updateStyling('textColor', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'sectionContainer':
+        return (
+          <>
+            <div className="style-group">
+              <h4 className="style-group-title">Container Styling</h4>
+              <div className="style-option">
+                <label>Spacing</label>
+                <div className="range-control-inline">
+                  <input
+                    type="range"
+                    min="12"
+                    max="48"
+                    value={styling.sectionSpacing || 24}
+                    onChange={(e) => updateStyling('sectionSpacing', parseFloat(e.target.value))}
+                    className="style-range"
+                  />
+                  <span className="range-value">{styling.sectionSpacing || 24}px</span>
+                </div>
+              </div>
+              <div className="style-option">
+                <label>Background</label>
+                <div className="color-picker-row">
+                  <input
+                    type="color"
+                    value={styling.sectionBackground || '#ffffff'}
+                    onChange={(e) => updateStyling('sectionBackground', e.target.value)}
+                    className="color-input"
+                  />
+                  <input
+                    type="text"
+                    value={styling.sectionBackground || '#ffffff'}
+                    onChange={(e) => updateStyling('sectionBackground', e.target.value)}
+                    className="color-text-input"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      default:
+        return (
+          <div className="empty-state">
+            <p>No styling options available for this component.</p>
+          </div>
+        );
+    }
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -517,9 +1038,55 @@ export default function Editor() {
                   <div className="section-header-modern">
                     <div>
                       <h3>Style Customization</h3>
-                      <p className="section-description">Customize colors, fonts, and spacing</p>
+                      <p className="section-description">
+                        {selectedComponent 
+                          ? `Editing: ${getComponentDisplayName(selectedComponent)}`
+                          : 'Click any element in the preview to style it'}
+                      </p>
                     </div>
+                    {selectedComponent && (
+                      <button
+                        className="clear-selection-btn"
+                        onClick={() => setSelectedComponent(null)}
+                        title="Clear Selection"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+                    )}
                   </div>
+
+                  {selectedComponent && (
+                    <>
+                      <div className="selected-component-info">
+                        <div className="component-badge">
+                          <span className="badge-icon">🎯</span>
+                          <span className="badge-text">Selected: {getComponentDisplayName(selectedComponent)}</span>
+                        </div>
+                      </div>
+
+                      {/* Component-Specific Styling Options */}
+                      <div className="component-style-options">
+                        {renderComponentStyleOptions(selectedComponent)}
+                      </div>
+
+                      {/* Delete Button for Deletable Elements */}
+                      {selectedComponent.deletable && (
+                        <div className="delete-section">
+                          <button
+                            className="delete-element-btn-sidebar"
+                            onClick={() => handleDeleteElement(selectedComponent)}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M2 4h12M5.5 4V3a1 1 0 011-1h3a1 1 0 011 1v1M7 7v5M9 7v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
+                            <span>Delete Element</span>
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
 
                   {/* Colors */}
                   <div className="style-group">
@@ -847,6 +1414,8 @@ export default function Editor() {
                   updateHeading={updateHeading}
                   addSection={addSection}
                   removeSection={removeSection}
+                  onComponentClick={handleComponentClick}
+                  selectedComponent={selectedComponent}
                 />
               </div>
             </div>
@@ -899,6 +1468,8 @@ export default function Editor() {
             <div className="drawer-overlay" onClick={() => setShowTemplates(false)}></div>
           )}
         </div>
+
+
 
         {/* Hidden print version */}
         <div style={{ position: 'absolute', left: '-9999px' }}>

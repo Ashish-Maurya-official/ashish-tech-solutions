@@ -187,3 +187,53 @@
 }
 
 /* No responsive adjustments - fixed layout on all devices */
+
+
+/* ============================================
+   STYLEABLE ELEMENTS
+   Elements that can be clicked for styling
+   ============================================ */
+.styleable-element {
+  cursor: pointer;                    /* Pointer cursor to indicate clickable */
+  position: relative;                 /* Positioning context */
+  transition: all 0.2s ease;          /* Smooth transitions */
+}
+
+.styleable-element:hover {
+  outline: 2px dashed #6366f1;        /* Purple dashed outline on hover */
+  outline-offset: 4px;                /* Space between element and outline */
+  background: rgba(99, 102, 241, 0.05); /* Light purple background */
+}
+
+.styleable-element.selected {
+  outline: 2px solid #6366f1;         /* Solid purple outline when selected */
+  outline-offset: 4px;                /* Space between element and outline */
+  background: rgba(99, 102, 241, 0.1); /* Slightly darker purple background */
+}
+
+.styleable-element.selected::after {
+  content: '🎨';                      /* Paint brush emoji indicator */
+  position: absolute;                 /* Absolute positioning */
+  top: -8px;                          /* Above the element */
+  right: -8px;                        /* To the right */
+  background: #6366f1;                /* Purple background */
+  color: white;                       /* White emoji */
+  width: 24px;                        /* Fixed width */
+  height: 24px;                       /* Fixed height */
+  border-radius: 50%;                 /* Circular */
+  display: flex;                      /* Flexbox for centering */
+  align-items: center;                /* Vertically center */
+  justify-content: center;            /* Horizontally center */
+  font-size: 12px;                    /* Small emoji */
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4); /* Shadow for depth */
+  animation: pulse 2s infinite;       /* Pulsing animation */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);              /* Normal size */
+  }
+  50% {
+    transform: scale(1.1);            /* Slightly larger */
+  }
+}

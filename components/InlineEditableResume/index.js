@@ -75,7 +75,7 @@ function InlineEdit({ value, onChange, placeholder, multiline = false, className
     );
 }
 
-export default function InlineEditableResume({ templateId, data, updateField, updateHeading, forPrint = false }) {
+export default function InlineEditableResume({ templateId, data, updateField, updateHeading, onComponentClick, selectedComponent, forPrint = false }) {
     const template = getTemplate(templateId);
     const TemplateComponent = template.component;
 
@@ -259,7 +259,11 @@ export default function InlineEditableResume({ templateId, data, updateField, up
     return (
         <div className={`resume-preview-wrapper ${forPrint ? 'for-print' : ''} inline-editable`}>
             <div className="resume-page a4-page" data-template={templateId}>
-                <TemplateComponent data={forPrint ? data : editableData} />
+                <TemplateComponent 
+                    data={forPrint ? data : editableData}
+                    onComponentClick={onComponentClick}
+                    selectedComponent={selectedComponent}
+                />
             </div>
         </div>
     );

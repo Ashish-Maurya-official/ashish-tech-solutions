@@ -1,0 +1,191 @@
+/* Floating Style Panel - Canva-like */
+.stylePanelFloating {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 280px;
+  max-height: 400px;
+  overflow: hidden;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stylePanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.stylePanelHeader h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.stylePanelClose {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.stylePanelClose:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.stylePanelContent {
+  padding: 16px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.styleOption {
+  margin-bottom: 16px;
+}
+
+.styleOption:last-child {
+  margin-bottom: 0;
+}
+
+.styleOption label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.colorControl {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.colorPickerSmall {
+  width: 50px;
+  height: 36px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.colorTextSmall {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+}
+
+.rangeControl {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rangeSliderSmall {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #e5e7eb;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.rangeSliderSmall::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6366f1;
+  cursor: pointer;
+}
+
+.rangeSliderSmall::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6366f1;
+  cursor: pointer;
+  border: none;
+}
+
+.rangeValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6366f1;
+  min-width: 35px;
+  text-align: right;
+}
+
+.selectSmall {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+  cursor: pointer;
+}
+
+.selectSmall:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+/* Delete Button */
+.stylePanelFooter {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.deleteElementBtn {
+  width: 100%;
+  padding: 10px 16px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.deleteElementBtn:hover {
+  background: #fecaca;
+  border-color: #fca5a5;
+}
+
+.deleteElementBtn svg {
+  width: 16px;
+  height: 16px;
+}

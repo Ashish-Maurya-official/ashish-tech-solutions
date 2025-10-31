@@ -52,6 +52,7 @@ const sampleData = {
 export function ResumeProvider({ children }) {
   const [resumeData, setResumeData] = useState(sampleData);
   const [selectedDesign, setSelectedDesign] = useState('classic');
+  const [selectedComponent, setSelectedComponent] = useState(null); // Track which component is selected for styling
 
   const updateField = (path, value) => {
     setResumeData(prev => {
@@ -198,6 +199,8 @@ export function ResumeProvider({ children }) {
       setResumeData,
       selectedDesign,
       setSelectedDesign,
+      selectedComponent,
+      setSelectedComponent,
       updateField,
       addSection,
       removeSection,
