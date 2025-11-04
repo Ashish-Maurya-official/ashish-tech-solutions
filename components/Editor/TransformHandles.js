@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function TransformHandles({ element, onResize, onRotate, zoom = 1 }) {
   const [isResizing, setIsResizing] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
-  const [startMousePos, setStartMousePos] = useState({ x: 0, y: 0 });
-  const [startElementPos, setStartElementPos] = useState({ x: 0, y: 0 });
-  const [startSize, setStartSize] = useState({ width: 0, height: 0 });
+  const startMousePosRef = useRef({ x: 0, y: 0 });
+  const startElementPosRef = useRef({ x: 0, y: 0 });
+  const startSizeRef = useRef({ width: 0, height: 0 });
 
   const handleSize = 8 / zoom; // Scale handle size with zoom
   const rotateHandleDistance = 30 / zoom;
 
   const handleMouseDown = (e, handle) => {
-    e.stopPropagation();
-    setStartMousePos({ x: e.clientX, y: e.clientY });
-    setStartElementPos({ x: element.position.x, y: element.position.y });
-    setStartSize({ width: element.size.width, height: element.size.height });
+    e.preventDefault()
+    e.stopPropagation()
+    startMousePosRef.current = { x: e.clientX, y: e.clientY }
+    startElementPosRef.current = { x: element.position.x, y: element.position.y }
+    startSizeRef.current = { width: element.size.width, height: element.size.height }
 
     const handleMouseMove = (moveEvent) => {
       if (handle === 'rotate') {
@@ -34,58 +35,62 @@ export default function TransformHandles({ element, onResize, onRotate, zoom = 1
   };
 
   const handleResizeMove = (e, handle) => {
-    const deltaX = (e.clientX - startMousePos.x) / zoom;
-    const deltaY = (e.clientY - startMousePos.y) / zoom;
-    const aspectRatio = startSize.width / startSize.height;
+    const { x: startMouseX, y: startMouseY } = startMousePosRef.current
+    const { x: startElementX, y: startElementY } = startElementPosRef.current
+    const { width: startWidth, height: startHeight } = startSizeRef.current
+
+    const deltaX = (e.clientX - startMouseX) / zoom
+    const deltaY = (e.clientY - startMouseY) / zoom
+    const aspectRatio = startWidth / startHeight
     const maintainAspect = e.shiftKey;
 
-    let newWidth = startSize.width;
-    let newHeight = startSize.height;
-    let newX = startElementPos.x;
-    let newY = startElementPos.y;
+    let newWidth = startWidth
+    let newHeight = startHeight
+    let newX = startElementX
+    let newY = startElementY
 
     switch (handle) {
       case 'nw':
         // Top-left: move position and adjust size
-        newWidth = startSize.width - deltaX;
-        newHeight = maintainAspect ? newWidth / aspectRatio : startSize.height - deltaY;
-        newX = startElementPos.x + deltaX;
-        newY = maintainAspect ? startElementPos.y + (startSize.height - newHeight) : startElementPos.y + deltaY;
+        newWidth = startWidth - deltaX
+        newHeight = maintainAspect ? newWidth / aspectRatio : startHeight - deltaY
+        newX = startElementX + deltaX
+        newY = maintainAspect ? startElementY + (startHeight - newHeight) : startElementY + deltaY
         break;
       case 'n':
         // Top: move Y position and adjust height
-        newHeight = startSize.height - deltaY;
-        newY = startElementPos.y + deltaY;
+        newHeight = startHeight - deltaY
+        newY = startElementY + deltaY
         break;
       case 'ne':
         // Top-right: adjust width and height, move Y
-        newWidth = startSize.width + deltaX;
-        newHeight = maintainAspect ? newWidth / aspectRatio : startSize.height - deltaY;
-        newY = maintainAspect ? startElementPos.y + (startSize.height - newHeight) : startElementPos.y + deltaY;
+        newWidth = startWidth + deltaX
+        newHeight = maintainAspect ? newWidth / aspectRatio : startHeight - deltaY
+        newY = maintainAspect ? startElementY + (startHeight - newHeight) : startElementY + deltaY
         break;
       case 'e':
         // Right: only adjust width
-        newWidth = startSize.width + deltaX;
+        newWidth = startWidth + deltaX
         break;
       case 'se':
         // Bottom-right: adjust both dimensions
-        newWidth = startSize.width + deltaX;
-        newHeight = maintainAspect ? newWidth / aspectRatio : startSize.height + deltaY;
+        newWidth = startWidth + deltaX
+        newHeight = maintainAspect ? newWidth / aspectRatio : startHeight + deltaY
         break;
       case 's':
         // Bottom: only adjust height
-        newHeight = startSize.height + deltaY;
+        newHeight = startHeight + deltaY
         break;
       case 'sw':
         // Bottom-left: adjust both, move X
-        newWidth = startSize.width - deltaX;
-        newHeight = maintainAspect ? newWidth / aspectRatio : startSize.height + deltaY;
-        newX = startElementPos.x + deltaX;
+        newWidth = startWidth - deltaX
+        newHeight = maintainAspect ? newWidth / aspectRatio : startHeight + deltaY
+        newX = startElementX + deltaX
         break;
       case 'w':
         // Left: adjust width and move X
-        newWidth = startSize.width - deltaX;
-        newX = startElementPos.x + deltaX;
+        newWidth = startWidth - deltaX
+        newX = startElementX + deltaX
         break;
     }
 

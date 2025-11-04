@@ -1,17 +1,23 @@
-import { store } from '@/store/store'
-import {
+import { configureStore } from '@reduxjs/toolkit'
+import editorReducer, {
   addElement,
-  updateElement,
-  deleteElement,
   selectElement,
   setZoomLevel,
-  undo,
-  redo,
-} from '@/store/store'
+} from '@/store/slices/editorSlice'
+
+const createTestStore = () =>
+  configureStore({
+    reducer: {
+      editor: editorReducer,
+    },
+  })
+
+let store
 
 describe('Editor Slice', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    store = createTestStore()
   })
 
   it('has initial state', () => {

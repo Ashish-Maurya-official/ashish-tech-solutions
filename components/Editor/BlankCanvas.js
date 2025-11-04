@@ -119,10 +119,14 @@ export default function BlankCanvas({
 
     switch (element.type) {
       case 'text':
+        const textWidth = element.size?.width ?? 200
+        const textHeight = element.size?.height
         return (
           <div
             style={{
               ...element.styling,
+              width: textWidth,
+              ...(textHeight ? { height: textHeight } : {}),
               padding: '8px 12px',
               background: element.styling?.background || 'transparent',
               borderRadius: element.styling?.borderRadius || '4px',
@@ -138,10 +142,14 @@ export default function BlankCanvas({
 
       case 'heading':
         const HeadingTag = element.level || 'h1';
+        const headingWidth = element.size?.width ?? undefined
+        const headingHeight = element.size?.height ?? undefined
         return (
           <HeadingTag
             style={{
               ...element.styling,
+              ...(headingWidth ? { width: headingWidth } : {}),
+              ...(headingHeight ? { height: headingHeight } : {}),
               margin: 0,
               padding: '8px 12px',
               cursor: isEditing ? 'move' : 'default'

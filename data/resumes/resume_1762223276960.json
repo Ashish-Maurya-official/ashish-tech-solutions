@@ -1,0 +1,27 @@
+{
+  "id": "resume_1762223276960",
+  "name": "New Resume (Copy)",
+  "createdAt": "2025-11-04T02:27:56.960Z",
+  "updatedAt": "2025-11-04T02:27:56.975Z",
+  "selectedDesign": "classic",
+  "data": {
+    "name": "",
+    "title": "",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "linkedin": "",
+    "github": "",
+    "summary": "",
+    "experience": [],
+    "education": [],
+    "skills": [],
+    "projects": [],
+    "languages": [],
+    "links": [],
+    "customSections": [],
+    "styling": {},
+    "sectionVisibility": {},
+    "headings": {}
+  }
+}
