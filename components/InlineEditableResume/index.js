@@ -75,7 +75,7 @@ function InlineEdit({ value, onChange, placeholder, multiline = false, className
     );
 }
 
-export default function InlineEditableResume({ templateId, data, updateField, updateHeading, onComponentClick, selectedComponent, forPrint = false }) {
+export default function InlineEditableResume({ templateId, data, updateField, updateHeading, onComponentClick, selectedComponent, forPrint = false, enableDragDrop = false, onReorderSections, onUpdateElementPosition }) {
     const template = getTemplate(templateId);
     const TemplateComponent = template.component;
 
@@ -263,6 +263,10 @@ export default function InlineEditableResume({ templateId, data, updateField, up
                     data={forPrint ? data : editableData}
                     onComponentClick={onComponentClick}
                     selectedComponent={selectedComponent}
+                    enableDragDrop={enableDragDrop}
+                    onReorderSections={onReorderSections}
+                    onUpdateElementPosition={onUpdateElementPosition}
+                    isEditing={!forPrint}
                 />
             </div>
         </div>

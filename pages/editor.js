@@ -6,6 +6,10 @@ import html2canvas from 'html2canvas';
 import Head from 'next/head';
 import ResumePreview from '../components/ResumePreview';
 import InlineEditableResume from '../components/InlineEditableResume';
+import StylePresets from '../components/StylePresets';
+import { COLOR_PRESETS, SHAPES } from '../components/ShapesLibrary';
+import ElementsPanel from '../components/Editor/ElementsPanel';
+import BlankCanvas from '../components/Editor/BlankCanvas';
 
 import { templates } from '../components/templates';
 
@@ -62,14 +66,24 @@ export default function Editor() {
     updateCustomSection,
     addSubheading,
     removeSubheading,
-    updateSubheading
+    updateSubheading,
+    reorderSections,
+    reorderSectionItems,
+    updateElementPosition,
+    addElement,
+    updateElement,
+    deleteElement,
+    updatePageStyle
   } = useResume();
-  const [activeSection, setActiveSection] = useState('personal');
+  
+  const [selectedElement, setSelectedElement] = useState(null);
+  const [activeSection, setActiveSection] = useState('elements');
   const [showSidebar, setShowSidebar] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [dragMode, setDragMode] = useState(false);
   const resumeRef = useRef();
   const printRef = useRef();
 
@@ -104,6 +118,13 @@ export default function Editor() {
     
     // Clear selection after delete
     setSelectedComponent(null);
+  };
+
+  // Apply style preset
+  const handleApplyPreset = (presetStyling) => {
+    Object.keys(presetStyling).forEach(key => {
+      updateStyling(key, presetStyling[key]);
+    });
   };
 
   // Get display name for component
@@ -302,6 +323,34 @@ export default function Editor() {
           <>
             <div className="style-group">
               <h4 className="style-group-title">Divider Styling</h4>
+              
+              <div className="style-option">
+                <label>Divider Shape</label>
+                <div className="divider-shapes-grid">
+                  {SHAPES.dividers.slice(0, 5).map((shape) => (
+                    <button
+                      key={shape.id}
+                      className={`divider-shape-btn ${styling.dividerShape === shape.id ? 'active' : ''}`}
+                      onClick={() => updateStyling('dividerShape', shape.id)}
+                    >
+                      <div className="divider-shape-preview">
+                        {shape.id === 'line' && <div style={{ width: '100%', height: '2px', backgroundColor: styling.dividerColor || '#1f2937' }}></div>}
+                        {shape.id === 'double-line' && (
+                          <div style={{ width: '100%' }}>
+                            <div style={{ width: '100%', height: '2px', backgroundColor: styling.dividerColor || '#1f2937', marginBottom: '3px' }}></div>
+                            <div style={{ width: '100%', height: '1px', backgroundColor: styling.dividerColor || '#1f2937' }}></div>
+                          </div>
+                        )}
+                        {shape.id === 'dotted' && <div style={{ width: '100%', height: '2px', borderTop: `2px dotted ${styling.dividerColor || '#1f2937'}` }}></div>}
+                        {shape.id === 'wave' && <div style={{ fontSize: '16px', color: styling.dividerColor || '#1f2937' }}>〰</div>}
+                        {shape.id === 'zigzag' && <div style={{ fontSize: '14px', color: styling.dividerColor || '#1f2937' }}>⚡</div>}
+                      </div>
+                      <span className="divider-shape-name">{shape.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
               <div className="style-option">
                 <label>Color</label>
                 <div className="color-picker-row">
@@ -547,6 +596,70 @@ export default function Editor() {
           <>
             <div className="style-group">
               <h4 className="style-group-title">Container Styling</h4>
+              
+              <div className="style-option">
+                <label>Position Type</label>
+                <select
+                  value={styling.containerPosition || 'relative'}
+                  onChange={(e) => updateStyling('containerPosition', e.target.value)}
+                  className="style-select"
+                >
+                  <option value="relative">Relative (Normal Flow)</option>
+                  <option value="absolute">Absolute (Free Position)</option>
+                  <option value="fixed">Fixed (Stays on Screen)</option>
+                  <option value="sticky">Sticky (Scroll Effect)</option>
+                </select>
+              </div>
+
+              {styling.containerPosition === 'absolute' || styling.containerPosition === 'fixed' ? (
+                <>
+                  <div className="style-option">
+                    <label>Top Position</label>
+                    <div className="range-control-inline">
+                      <input
+                        type="range"
+                        min="0"
+                        max="1000"
+                        value={styling.containerTop || 0}
+                        onChange={(e) => updateStyling('containerTop', parseFloat(e.target.value))}
+                        className="style-range"
+                      />
+                      <span className="range-value">{styling.containerTop || 0}px</span>
+                    </div>
+                  </div>
+
+                  <div className="style-option">
+                    <label>Left Position</label>
+                    <div className="range-control-inline">
+                      <input
+                        type="range"
+                        min="0"
+                        max="1000"
+                        value={styling.containerLeft || 0}
+                        onChange={(e) => updateStyling('containerLeft', parseFloat(e.target.value))}
+                        className="style-range"
+                      />
+                      <span className="range-value">{styling.containerLeft || 0}px</span>
+                    </div>
+                  </div>
+
+                  <div className="style-option">
+                    <label>Z-Index (Layer)</label>
+                    <div className="range-control-inline">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={styling.containerZIndex || 1}
+                        onChange={(e) => updateStyling('containerZIndex', parseFloat(e.target.value))}
+                        className="style-range"
+                      />
+                      <span className="range-value">{styling.containerZIndex || 1}</span>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              
               <div className="style-option">
                 <label>Spacing</label>
                 <div className="range-control-inline">
@@ -643,8 +756,8 @@ export default function Editor() {
   return (
     <>
       <Head>
-        <title>Resume Editor - AT Solutions</title>
-        <meta name="description" content="Edit your professional resume with our intuitive editor." />
+        <title>Document Editor - AT Solutions</title>
+        <meta name="description" content="Create beautiful documents with our intuitive drag-and-drop editor." />
       </Head>
       <main className="modern-editor-page">
         {/* Top Navigation Bar */}
@@ -658,8 +771,8 @@ export default function Editor() {
             </button>
             {!isMobile && (
               <div className="editor-title">
-                <h1>Resume Editor</h1>
-                <span className="subtitle">Click on resume to edit directly</span>
+                <h1>Document Editor</h1>
+                <span className="subtitle">Add elements and drag to position</span>
               </div>
             )}
           </div>
@@ -694,6 +807,22 @@ export default function Editor() {
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
+                </button>
+                <div className="toolbar-divider"></div>
+                <button
+                  className={`drag-mode-btn ${dragMode ? 'active' : ''}`}
+                  onClick={() => setDragMode(!dragMode)}
+                  title={dragMode ? "Disable Drag Mode" : "Enable Drag Mode"}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="5" cy="4" r="1.5" fill="currentColor"/>
+                    <circle cx="11" cy="4" r="1.5" fill="currentColor"/>
+                    <circle cx="5" cy="8" r="1.5" fill="currentColor"/>
+                    <circle cx="11" cy="8" r="1.5" fill="currentColor"/>
+                    <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+                    <circle cx="11" cy="12" r="1.5" fill="currentColor"/>
+                  </svg>
+                  <span>{dragMode ? 'Drag Mode' : 'Reorder'}</span>
                 </button>
               </div>
             )}
@@ -752,14 +881,8 @@ export default function Editor() {
             <div className="sidebar-nav">
               <div className="nav-tabs">
                 {[
-                  { id: 'personal', icon: '👤', label: 'Personal' },
-                  { id: 'experience', icon: '💼', label: 'Experience' },
-                  { id: 'education', icon: '🎓', label: 'Education' },
-                  { id: 'skills', icon: '⚡', label: 'Skills' },
-                  { id: 'links', icon: '🔗', label: 'Links' },
-                  { id: 'style', icon: '🎨', label: 'Style' },
-                  { id: 'manage', icon: '⚙️', label: 'Manage' },
-                  { id: 'custom', icon: '➕', label: 'Add Sections' }
+                  { id: 'elements', icon: '➕', label: 'Elements' },
+                  { id: 'style', icon: '🎨', label: 'Style' }
                 ].map((section) => (
                   <button
                     key={section.id}
@@ -774,7 +897,754 @@ export default function Editor() {
             </div>
 
             <div className="sidebar-content">
-              {activeSection === 'personal' && (
+              {activeSection === 'elements' && (
+                <ElementsPanel onAddElement={(elementType) => {
+                  // Create element with default properties
+                  const defaults = {
+                    text: { content: 'New Text', styling: { fontSize: '14px', color: '#000000' } },
+                    heading: { content: 'New Heading', level: elementType.level || 'h1', styling: { fontSize: '32px', fontWeight: 'bold', color: '#000000' } },
+                    rectangle: { size: { width: 200, height: 100 }, styling: { fill: '#6366f1', borderRadius: '0px' } },
+                    circle: { size: { width: 100, height: 100 }, styling: { fill: '#8b5cf6' } },
+                    triangle: { size: { width: 100, height: 100 }, styling: { fill: '#f59e0b' } },
+                    star: { size: { width: 60 }, styling: { fill: '#fbbf24' } },
+                    line: { size: { width: 200, height: 2 }, styling: { fill: '#000000' } },
+                    'arrow-right': { size: { width: 48 }, styling: { fill: '#000000' } },
+                    'arrow-left': { size: { width: 48 }, styling: { fill: '#000000' } },
+                    'arrow-up': { size: { width: 48 }, styling: { fill: '#000000' } },
+                    'arrow-down': { size: { width: 48 }, styling: { fill: '#000000' } },
+                    image: { src: 'https://via.placeholder.com/200', size: { width: 200, height: 'auto' } },
+                    icon: { content: '⭐', size: { width: 48 } }
+                  };
+                  
+                  const elementData = {
+                    type: elementType.type,
+                    position: { x: 50, y: 50 },
+                    ...defaults[elementType.type],
+                    ...(elementType.level && { level: elementType.level })
+                  };
+                  
+                  addElement(elementData);
+                }} />
+              )}
+
+              {activeSection === 'style' && (
+                <div className="canva-style-panel">
+                  {/* Header */}
+                  <div className="canva-panel-header">
+                    {selectedElement ? (
+                      <>
+                        <div className="panel-title-section">
+                          <button
+                            className="back-to-page-btn"
+                            onClick={() => setSelectedElement(null)}
+                            title="Back to page"
+                          >
+                            ←
+                          </button>
+                          <div>
+                            <h3>Element</h3>
+                            <p className="element-type-label">
+                              {(() => {
+                                const element = (resumeData.elements || []).find(el => el.id === selectedElement);
+                                if (!element) return 'Unknown';
+                                const typeLabels = {
+                                  'text': 'Text',
+                                  'heading': `Heading ${element.level?.toUpperCase() || 'H1'}`,
+                                  'rectangle': 'Rectangle',
+                                  'circle': 'Circle',
+                                  'triangle': 'Triangle',
+                                  'star': 'Star',
+                                  'line': 'Line',
+                                  'arrow-right': 'Arrow →',
+                                  'arrow-left': 'Arrow ←',
+                                  'arrow-up': 'Arrow ↑',
+                                  'arrow-down': 'Arrow ↓',
+                                  'image': 'Image',
+                                  'icon': 'Icon'
+                                };
+                                return typeLabels[element.type] || element.type;
+                              })()}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="panel-title-section">
+                        <div>
+                          <h3>Page</h3>
+                          <p className="element-type-label">Background & Layout</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="canva-panel-content">
+                  {selectedElement ? (
+                    <>
+                      {(() => {
+                        const element = (resumeData.elements || []).find(el => el.id === selectedElement);
+                        if (!element) return <p className="error-message">Element not found</p>;
+
+                        return (
+                          <>
+                            {/* Text/Heading Elements */}
+                            {(element.type === 'text' || element.type === 'heading') && (
+                              <>
+                                <div className="canva-section">
+                                  <label className="canva-label">Content</label>
+                                  <textarea
+                                    value={element.content || ''}
+                                    onChange={(e) => updateElement(selectedElement, { content: e.target.value })}
+                                    className="canva-textarea"
+                                    rows="3"
+                                    placeholder="Enter text..."
+                                  />
+                                </div>
+
+                                {element.type === 'heading' && (
+                                  <div className="canva-section">
+                                    <label className="canva-label">Heading Level</label>
+                                    <div className="heading-level-grid">
+                                      {['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map(level => (
+                                        <button
+                                          key={level}
+                                          className={`heading-level-btn ${element.level === level ? 'active' : ''}`}
+                                          onClick={() => updateElement(selectedElement, { level })}
+                                        >
+                                          {level.toUpperCase()}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className="canva-section">
+                                  <label className="canva-label">Font Size</label>
+                                  <div className="canva-slider-group">
+                                    <input
+                                      type="range"
+                                      min="12"
+                                      max="72"
+                                      value={parseInt(element.styling?.fontSize) || 14}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, fontSize: `${e.target.value}px` }
+                                      })}
+                                      className="canva-slider"
+                                    />
+                                    <input
+                                      type="number"
+                                      min="12"
+                                      max="72"
+                                      value={parseInt(element.styling?.fontSize) || 14}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, fontSize: `${e.target.value}px` }
+                                      })}
+                                      className="canva-number-input"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="canva-section">
+                                  <label className="canva-label">Color</label>
+                                  <div className="canva-color-picker">
+                                    <input
+                                      type="color"
+                                      value={element.styling?.color || '#000000'}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, color: e.target.value }
+                                      })}
+                                      className="canva-color-input"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={element.styling?.color || '#000000'}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, color: e.target.value }
+                                      })}
+                                      className="canva-color-text"
+                                      placeholder="#000000"
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            {/* Rectangle */}
+                            {element.type === 'rectangle' && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Content</label>
+                                    <input
+                                      type="text"
+                                      value={element.content || ''}
+                                      onChange={(e) => updateElement(selectedElement, { content: e.target.value })}
+                                      className="style-select"
+                                    />
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Font Size</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="12"
+                                        max="72"
+                                        value={parseInt(element.styling?.fontSize) || 14}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fontSize: `${e.target.value}px` }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{parseInt(element.styling?.fontSize) || 14}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.color || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, color: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.color || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, color: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                  {element.type === 'heading' && (
+                                    <div className="style-option">
+                                      <label>Heading Level</label>
+                                      <select
+                                        value={element.level || 'h1'}
+                                        onChange={(e) => updateElement(selectedElement, { level: e.target.value })}
+                                        className="style-select"
+                                      >
+                                        <option value="h1">H1 (Largest)</option>
+                                        <option value="h2">H2</option>
+                                        <option value="h3">H3</option>
+                                        <option value="h4">H4</option>
+                                        <option value="h5">H5</option>
+                                        <option value="h6">H6 (Smallest)</option>
+                                      </select>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                            {element.type === 'rectangle' && (
+                              <>
+                                <div className="canva-section">
+                                  <label className="canva-label">Size</label>
+                                  <div className="size-inputs-row">
+                                    <div className="size-input-group">
+                                      <label className="size-sublabel">W</label>
+                                      <input
+                                        type="number"
+                                        min="50"
+                                        max="600"
+                                        value={element.size?.width || 200}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="canva-number-input"
+                                      />
+                                    </div>
+                                    <div className="size-input-group">
+                                      <label className="size-sublabel">H</label>
+                                      <input
+                                        type="number"
+                                        min="50"
+                                        max="400"
+                                        value={element.size?.height || 100}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, height: parseInt(e.target.value) }
+                                        })}
+                                        className="canva-number-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="canva-section">
+                                  <label className="canva-label">Fill</label>
+                                  <div className="canva-color-picker">
+                                    <input
+                                      type="color"
+                                      value={element.styling?.fill || '#6366f1'}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, fill: e.target.value }
+                                      })}
+                                      className="canva-color-input"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={element.styling?.fill || '#6366f1'}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, fill: e.target.value }
+                                      })}
+                                      className="canva-color-text"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="canva-section">
+                                  <label className="canva-label">Corner Radius</label>
+                                  <div className="canva-slider-group">
+                                    <input
+                                      type="range"
+                                      min="0"
+                                      max="50"
+                                      value={parseInt(element.styling?.borderRadius) || 0}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, borderRadius: `${e.target.value}px` }
+                                      })}
+                                      className="canva-slider"
+                                    />
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      max="50"
+                                      value={parseInt(element.styling?.borderRadius) || 0}
+                                      onChange={(e) => updateElement(selectedElement, { 
+                                        styling: { ...element.styling, borderRadius: `${e.target.value}px` }
+                                      })}
+                                      className="canva-number-input"
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                              {element.type === 'circle' && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Size</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="300"
+                                        value={element.size?.width || 100}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { width: parseInt(e.target.value), height: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 100}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Fill Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.fill || '#8b5cf6'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.fill || '#8b5cf6'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {element.type === 'triangle' && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Width</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="300"
+                                        value={element.size?.width || 100}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 100}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Height</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="300"
+                                        value={element.size?.height || 100}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, height: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.height || 100}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Fill Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.fill || '#f59e0b'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.fill || '#f59e0b'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {(element.type === 'star' || element.type === 'icon') && (
+                                <>
+                                  {element.type === 'icon' && (
+                                    <div className="style-option">
+                                      <label>Icon</label>
+                                      <input
+                                        type="text"
+                                        value={element.content || '⭐'}
+                                        onChange={(e) => updateElement(selectedElement, { content: e.target.value })}
+                                        className="style-select"
+                                        placeholder="Enter emoji or symbol"
+                                      />
+                                    </div>
+                                  )}
+                                  <div className="style-option">
+                                    <label>Size</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="24"
+                                        max="120"
+                                        value={element.size?.width || 48}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 48}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.fill || '#fbbf24'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.fill || '#fbbf24'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {element.type === 'line' && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Width</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="600"
+                                        value={element.size?.width || 200}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 200}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Thickness</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="1"
+                                        max="10"
+                                        value={element.size?.height || 2}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, height: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.height || 2}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.fill || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.fill || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {(element.type === 'arrow-right' || element.type === 'arrow-left' || 
+                                element.type === 'arrow-up' || element.type === 'arrow-down') && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Size</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="24"
+                                        max="120"
+                                        value={element.size?.width || 48}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 48}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Color</label>
+                                    <div className="color-picker-row">
+                                      <input
+                                        type="color"
+                                        value={element.styling?.fill || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-input"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={element.styling?.fill || '#000000'}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, fill: e.target.value }
+                                        })}
+                                        className="color-text-input"
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {element.type === 'image' && (
+                                <>
+                                  <div className="style-option">
+                                    <label>Image URL</label>
+                                    <input
+                                      type="text"
+                                      value={element.src || ''}
+                                      onChange={(e) => updateElement(selectedElement, { src: e.target.value })}
+                                      className="style-select"
+                                      placeholder="https://example.com/image.jpg"
+                                    />
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Width</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="600"
+                                        value={element.size?.width || 200}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          size: { ...element.size, width: parseInt(e.target.value) }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{element.size?.width || 200}px</span>
+                                    </div>
+                                  </div>
+                                  <div className="style-option">
+                                    <label>Border Radius</label>
+                                    <div className="range-control-inline">
+                                      <input
+                                        type="range"
+                                        min="0"
+                                        max="50"
+                                        value={parseInt(element.styling?.borderRadius) || 0}
+                                        onChange={(e) => updateElement(selectedElement, { 
+                                          styling: { ...element.styling, borderRadius: `${e.target.value}px` }
+                                        })}
+                                        className="style-range"
+                                      />
+                                      <span className="range-value">{parseInt(element.styling?.borderRadius) || 0}px</span>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                            {/* Position Controls */}
+                            <div className="canva-divider"></div>
+                            <div className="canva-section">
+                              <label className="canva-label">Position</label>
+                              <div className="position-grid">
+                                <div className="size-input-group">
+                                  <label className="size-sublabel">X</label>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max="800"
+                                    value={element.position?.x || 0}
+                                    onChange={(e) => updateElement(selectedElement, { 
+                                      position: { ...element.position, x: parseInt(e.target.value) || 0 }
+                                    })}
+                                    className="canva-number-input"
+                                  />
+                                </div>
+                                <div className="size-input-group">
+                                  <label className="size-sublabel">Y</label>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max="1000"
+                                    value={element.position?.y || 0}
+                                    onChange={(e) => updateElement(selectedElement, { 
+                                      position: { ...element.position, y: parseInt(e.target.value) || 0 }
+                                    })}
+                                    className="canva-number-input"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+
+                      {/* Delete Button */}
+                      <button
+                        className="canva-delete-btn"
+                        onClick={() => {
+                          deleteElement(selectedElement);
+                          setSelectedElement(null);
+                        }}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 4h12M5.5 4V3a1 1 0 011-1h3a1 1 0 011 1v1M7 7v5M9 7v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                        <span>Delete</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Page Style */}
+                      <div className="canva-section">
+                        <label className="canva-label">Background</label>
+                        <div className="canva-color-picker">
+                          <input
+                            type="color"
+                            value={resumeData.pageStyle?.backgroundColor || '#ffffff'}
+                            onChange={(e) => updatePageStyle('backgroundColor', e.target.value)}
+                            className="canva-color-input"
+                          />
+                          <input
+                            type="text"
+                            value={resumeData.pageStyle?.backgroundColor || '#ffffff'}
+                            onChange={(e) => updatePageStyle('backgroundColor', e.target.value)}
+                            className="canva-color-text"
+                            placeholder="#ffffff"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="canva-section">
+                        <label className="canva-label">Padding</label>
+                        <div className="canva-slider-group">
+                          <input
+                            type="range"
+                            min="0"
+                            max="80"
+                            value={parseInt(resumeData.pageStyle?.padding) || 40}
+                            onChange={(e) => updatePageStyle('padding', `${e.target.value}px`)}
+                            className="canva-slider"
+                          />
+                          <input
+                            type="number"
+                            min="0"
+                            max="80"
+                            value={parseInt(resumeData.pageStyle?.padding) || 40}
+                            onChange={(e) => updatePageStyle('padding', `${e.target.value}px`)}
+                            className="canva-number-input"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="canva-section">
+                        <label className="canva-label">Page Size</label>
+                        <select
+                          value={resumeData.pageStyle?.width || '210mm'}
+                          onChange={(e) => {
+                            updatePageStyle('width', e.target.value);
+                            // Auto-adjust height based on width
+                            if (e.target.value === '210mm') updatePageStyle('minHeight', '297mm');
+                            if (e.target.value === '8.5in') updatePageStyle('minHeight', '11in');
+                          }}
+                          className="canva-select"
+                        >
+                          <option value="210mm">A4 (210 × 297 mm)</option>
+                          <option value="8.5in">Letter (8.5 × 11 in)</option>
+                          <option value="100%">Full Width</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+                  </div>
+                </div>
+              )}
+
+              {/* Remove all old section tabs - keep only for reference but hide */}
+              {false && activeSection === 'personal' && (
                 <div className="modern-form-section">
                   <div className="section-header-modern">
                     <h3>Personal Information</h3>
@@ -1037,11 +1907,11 @@ export default function Editor() {
                 <div className="modern-form-section">
                   <div className="section-header-modern">
                     <div>
-                      <h3>Style Customization</h3>
+                      <h3>{selectedElement ? 'Element Style' : 'Page Style'}</h3>
                       <p className="section-description">
-                        {selectedComponent 
-                          ? `Editing: ${getComponentDisplayName(selectedComponent)}`
-                          : 'Click any element in the preview to style it'}
+                        {selectedElement 
+                          ? `Editing: ${selectedElement}`
+                          : 'Page background and layout settings'}
                       </p>
                     </div>
                     {selectedComponent && (
@@ -1088,9 +1958,126 @@ export default function Editor() {
                     </>
                   )}
 
+                  {/* Context-Aware Styling */}
+                  {!selectedElement ? (
+                    <>
+                      {/* Page Style - Default */}
+                      <div className="style-group">
+                        <h4 className="style-group-title">📄 Page Settings</h4>
+                        
+                        <div className="style-option">
+                          <label>Background Color</label>
+                          <div className="color-picker-row">
+                            <input
+                              type="color"
+                              value={resumeData.pageStyle?.backgroundColor || '#ffffff'}
+                              onChange={(e) => updatePageStyle('backgroundColor', e.target.value)}
+                              className="color-input"
+                            />
+                            <input
+                              type="text"
+                              value={resumeData.pageStyle?.backgroundColor || '#ffffff'}
+                              onChange={(e) => updatePageStyle('backgroundColor', e.target.value)}
+                              className="color-text-input"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="style-option">
+                          <label>Page Padding</label>
+                          <div className="range-control-inline">
+                            <input
+                              type="range"
+                              min="0"
+                              max="80"
+                              value={resumeData.pageStyle?.padding || 40}
+                              onChange={(e) => updatePageStyle('padding', `${e.target.value}px`)}
+                              className="style-range"
+                            />
+                            <span className="range-value">{parseInt(resumeData.pageStyle?.padding) || 40}px</span>
+                          </div>
+                        </div>
+
+                        <div className="style-option">
+                          <label>Page Size</label>
+                          <select
+                            value={resumeData.pageStyle?.size || 'a4'}
+                            onChange={(e) => updatePageStyle('size', e.target.value)}
+                            className="style-select"
+                          >
+                            <option value="a4">A4 (210 × 297 mm)</option>
+                            <option value="letter">Letter (8.5 × 11 in)</option>
+                            <option value="custom">Custom</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Style Presets */}
+                      <StylePresets onApplyPreset={handleApplyPreset} />
+                    </>
+                  ) : (
+                    <>
+                      {/* Element-Specific Styling */}
+                      <div className="style-group">
+                        <h4 className="style-group-title">✏️ Element Properties</h4>
+                        
+                        <div className="style-option">
+                          <label>Element ID</label>
+                          <input
+                            type="text"
+                            value={selectedElement}
+                            disabled
+                            className="style-select"
+                            style={{ opacity: 0.6 }}
+                          />
+                        </div>
+
+                        <button
+                          className="delete-element-btn-sidebar"
+                          onClick={() => {
+                            deleteElement(selectedElement);
+                            setSelectedElement(null);
+                          }}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 4h12M5.5 4V3a1 1 0 011-1h3a1 1 0 011 1v1M7 7v5M9 7v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                          </svg>
+                          <span>Delete Element</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+
                   {/* Colors */}
                   <div className="style-group">
                     <h4 className="style-group-title">Colors</h4>
+                    
+                    {/* Color Presets */}
+                    <div className="style-option">
+                      <label>Color Presets</label>
+                      <div className="color-presets-grid">
+                        {COLOR_PRESETS.map((preset, index) => (
+                          <button
+                            key={index}
+                            className="color-preset-btn"
+                            onClick={() => {
+                              updateStyling('primaryColor', preset.primary);
+                              updateStyling('accentColor', preset.accent);
+                            }}
+                            title={preset.name}
+                            style={{
+                              background: `linear-gradient(135deg, ${preset.primary} 0%, ${preset.accent} 100%)`
+                            }}
+                          >
+                            {resumeData.styling?.primaryColor === preset.primary && (
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 4L6 11L3 8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     
                     <div className="style-option">
                       <label>Primary Color (Text & Borders)</label>
@@ -1194,6 +2181,327 @@ export default function Editor() {
                         <option value="compact">Compact</option>
                         <option value="normal">Normal</option>
                         <option value="spacious">Spacious</option>
+                      </select>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Page Padding</label>
+                      <div className="range-control-inline">
+                        <input
+                          type="range"
+                          min="20"
+                          max="80"
+                          value={resumeData.styling?.pagePadding || 40}
+                          onChange={(e) => updateStyling('pagePadding', parseFloat(e.target.value))}
+                          className="style-range"
+                        />
+                        <span className="range-value">{resumeData.styling?.pagePadding || 40}px</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Borders & Shadows */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Borders & Effects</h4>
+                    
+                    <div className="style-option">
+                      <label>Border Style</label>
+                      <select
+                        value={resumeData.styling?.borderStyle || 'none'}
+                        onChange={(e) => updateStyling('borderStyle', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="none">None</option>
+                        <option value="solid">Solid</option>
+                        <option value="dashed">Dashed</option>
+                        <option value="dotted">Dotted</option>
+                        <option value="double">Double</option>
+                      </select>
+                    </div>
+
+                    {resumeData.styling?.borderStyle && resumeData.styling?.borderStyle !== 'none' && (
+                      <>
+                        <div className="style-option">
+                          <label>Border Width</label>
+                          <div className="range-control-inline">
+                            <input
+                              type="range"
+                              min="1"
+                              max="10"
+                              value={resumeData.styling?.borderWidth || 1}
+                              onChange={(e) => updateStyling('borderWidth', parseFloat(e.target.value))}
+                              className="style-range"
+                            />
+                            <span className="range-value">{resumeData.styling?.borderWidth || 1}px</span>
+                          </div>
+                        </div>
+
+                        <div className="style-option">
+                          <label>Border Color</label>
+                          <div className="color-picker-row">
+                            <input
+                              type="color"
+                              value={resumeData.styling?.borderColor || '#e5e7eb'}
+                              onChange={(e) => updateStyling('borderColor', e.target.value)}
+                              className="color-input"
+                            />
+                            <input
+                              type="text"
+                              value={resumeData.styling?.borderColor || '#e5e7eb'}
+                              onChange={(e) => updateStyling('borderColor', e.target.value)}
+                              className="color-text-input"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="style-option">
+                          <label>Border Radius</label>
+                          <div className="range-control-inline">
+                            <input
+                              type="range"
+                              min="0"
+                              max="20"
+                              value={resumeData.styling?.borderRadius || 0}
+                              onChange={(e) => updateStyling('borderRadius', parseFloat(e.target.value))}
+                              className="style-range"
+                            />
+                            <span className="range-value">{resumeData.styling?.borderRadius || 0}px</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="style-option">
+                      <label>Shadow</label>
+                      <select
+                        value={resumeData.styling?.shadow || 'none'}
+                        onChange={(e) => updateStyling('shadow', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="none">None</option>
+                        <option value="sm">Small</option>
+                        <option value="md">Medium</option>
+                        <option value="lg">Large</option>
+                        <option value="xl">Extra Large</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Background */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Background</h4>
+                    
+                    <div className="style-option">
+                      <label>Page Background</label>
+                      <div className="color-picker-row">
+                        <input
+                          type="color"
+                          value={resumeData.styling?.pageBackground || '#ffffff'}
+                          onChange={(e) => updateStyling('pageBackground', e.target.value)}
+                          className="color-input"
+                        />
+                        <input
+                          type="text"
+                          value={resumeData.styling?.pageBackground || '#ffffff'}
+                          onChange={(e) => updateStyling('pageBackground', e.target.value)}
+                          className="color-text-input"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Background Pattern</label>
+                      <select
+                        value={resumeData.styling?.backgroundPattern || 'none'}
+                        onChange={(e) => updateStyling('backgroundPattern', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="none">None</option>
+                        <option value="dots">Dots</option>
+                        <option value="grid">Grid</option>
+                        <option value="lines">Lines</option>
+                        <option value="diagonal">Diagonal</option>
+                      </select>
+                    </div>
+
+                    {resumeData.styling?.backgroundPattern && resumeData.styling?.backgroundPattern !== 'none' && (
+                      <div className="style-option">
+                        <label>Pattern Opacity</label>
+                        <div className="range-control-inline">
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={resumeData.styling?.patternOpacity || 10}
+                            onChange={(e) => updateStyling('patternOpacity', parseFloat(e.target.value))}
+                            className="style-range"
+                          />
+                          <span className="range-value">{resumeData.styling?.patternOpacity || 10}%</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Icons & Images */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Icons & Images</h4>
+                    
+                    <div className="style-option">
+                      <label>Show Contact Icons</label>
+                      <label className="toggle-switch-inline">
+                        <input
+                          type="checkbox"
+                          checked={resumeData.styling?.showContactIcons !== false}
+                          onChange={(e) => updateStyling('showContactIcons', e.target.checked)}
+                        />
+                        <span className="toggle-slider-inline"></span>
+                      </label>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Icon Style</label>
+                      <select
+                        value={resumeData.styling?.iconStyle || 'emoji'}
+                        onChange={(e) => updateStyling('iconStyle', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="emoji">Emoji</option>
+                        <option value="symbols">Symbols</option>
+                        <option value="minimal">Minimal</option>
+                      </select>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Icon Size</label>
+                      <div className="range-control-inline">
+                        <input
+                          type="range"
+                          min="12"
+                          max="24"
+                          value={resumeData.styling?.iconSize || 16}
+                          onChange={(e) => updateStyling('iconSize', parseFloat(e.target.value))}
+                          className="style-range"
+                        />
+                        <span className="range-value">{resumeData.styling?.iconSize || 16}px</span>
+                      </div>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Profile Photo</label>
+                      <div className="photo-upload-section">
+                        {resumeData.styling?.profilePhoto ? (
+                          <div className="photo-preview">
+                            <img src={resumeData.styling.profilePhoto} alt="Profile" />
+                            <button
+                              className="remove-photo-btn"
+                              onClick={() => updateStyling('profilePhoto', null)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <button className="upload-photo-btn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M10 4V16M4 10H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                            <span>Upload Photo</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {resumeData.styling?.profilePhoto && (
+                      <>
+                        <div className="style-option">
+                          <label>Photo Shape</label>
+                          <select
+                            value={resumeData.styling?.photoShape || 'circle'}
+                            onChange={(e) => updateStyling('photoShape', e.target.value)}
+                            className="style-select"
+                          >
+                            <option value="circle">Circle</option>
+                            <option value="square">Square</option>
+                            <option value="rounded">Rounded Square</option>
+                          </select>
+                        </div>
+
+                        <div className="style-option">
+                          <label>Photo Size</label>
+                          <div className="range-control-inline">
+                            <input
+                              type="range"
+                              min="60"
+                              max="150"
+                              value={resumeData.styling?.photoSize || 100}
+                              onChange={(e) => updateStyling('photoSize', parseFloat(e.target.value))}
+                              className="style-range"
+                            />
+                            <span className="range-value">{resumeData.styling?.photoSize || 100}px</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Layout */}
+                  <div className="style-group">
+                    <h4 className="style-group-title">Layout</h4>
+                    
+                    <div className="style-option">
+                      <label>Text Alignment</label>
+                      <div className="alignment-buttons">
+                        {['left', 'center', 'right', 'justify'].map((align) => (
+                          <button
+                            key={align}
+                            className={`align-btn ${resumeData.styling?.textAlign === align ? 'active' : ''}`}
+                            onClick={() => updateStyling('textAlign', align)}
+                            title={align}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              {align === 'left' && (
+                                <>
+                                  <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="8" x2="10" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                                </>
+                              )}
+                              {align === 'center' && (
+                                <>
+                                  <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="4" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                                </>
+                              )}
+                              {align === 'right' && (
+                                <>
+                                  <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="6" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                                </>
+                              )}
+                              {align === 'justify' && (
+                                <>
+                                  <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+                                  <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                                </>
+                              )}
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="style-option">
+                      <label>Column Layout</label>
+                      <select
+                        value={resumeData.styling?.columnLayout || 'single'}
+                        onChange={(e) => updateStyling('columnLayout', e.target.value)}
+                        className="style-select"
+                      >
+                        <option value="single">Single Column</option>
+                        <option value="two-column">Two Columns</option>
+                        <option value="sidebar">Sidebar Layout</option>
                       </select>
                     </div>
                   </div>
@@ -1384,7 +2692,15 @@ export default function Editor() {
 
           {/* Center - Live Preview with Inline Editing */}
           <main className="modern-preview-area">
-            <div className="preview-toolbar">
+            {/* Drag Mode Indicator */}
+          {dragMode && (
+            <div className="drag-mode-indicator">
+              <span className="drag-mode-indicator-icon">🔄</span>
+              <span>Drag Mode Active - Drag sections to reorder them</span>
+            </div>
+          )}
+
+          <div className="preview-toolbar">
               <div className="template-info">
                 <span className="current-template-name">{templates[selectedDesign]?.name}</span>
                 <span className="template-category">{templates[selectedDesign]?.category}</span>
@@ -1394,7 +2710,7 @@ export default function Editor() {
                   <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
                   <path d="M8 7V11M8 5V5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
-                <span>Click any text to edit</span>
+                <span>{dragMode ? 'Drag sections to reorder' : 'Click any text to edit'}</span>
               </div>
             </div>
 
@@ -1407,16 +2723,29 @@ export default function Editor() {
                   transformOrigin: 'center top'
                 }}
               >
-                <InlineEditableResume
-                  templateId={selectedDesign}
-                  data={resumeData}
-                  updateField={updateField}
-                  updateHeading={updateHeading}
-                  addSection={addSection}
-                  removeSection={removeSection}
-                  onComponentClick={handleComponentClick}
-                  selectedComponent={selectedComponent}
-                />
+                {selectedDesign === 'canvas' ? (
+                  <BlankCanvas
+                    elements={resumeData.elements || []}
+                    pageStyle={resumeData.pageStyle || {}}
+                    onElementSelect={setSelectedElement}
+                    onElementUpdate={updateElement}
+                    onElementDelete={deleteElement}
+                    selectedElementId={selectedElement}
+                    isEditing={true}
+                    enableDragDrop={dragMode}
+                  />
+                ) : (
+                  <InlineEditableResume
+                    data={resumeData}
+                    templateId={selectedDesign}
+                    onComponentClick={handleComponentClick}
+                    selectedComponent={selectedComponent}
+                    onDeleteElement={handleDeleteElement}
+                    dragMode={dragMode}
+                    onReorderSections={reorderSections}
+                    onReorderSectionItems={reorderSectionItems}
+                  />
+                )}
               </div>
             </div>
           </main>
@@ -1433,7 +2762,45 @@ export default function Editor() {
             </div>
 
             <div className="templates-grid">
-              {resumeDesigns.map((design) => (
+              {/* Blank Canvas Template - Always First */}
+              <div
+                className={`template-card ${selectedDesign === 'canvas' ? 'selected' : ''}`}
+                onClick={() => {
+                  handleDesignChange('canvas');
+                  setShowTemplates(false);
+                }}
+              >
+                <div className="template-preview-card blank-canvas-preview">
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    background: 'white',
+                    border: '2px dashed #d1d5db',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '32px'
+                  }}>
+                    📄
+                  </div>
+                  {selectedDesign === 'canvas' && (
+                    <div className="selected-badge">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M13 4L6 11L3 8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="template-card-info">
+                  <h4>Blank Canvas</h4>
+                  <span className="category-badge" style={{ backgroundColor: '#6366f120', color: '#6366f1' }}>
+                    Start Fresh
+                  </span>
+                </div>
+              </div>
+
+              {/* Other Templates */}
+              {resumeDesigns.filter(d => d.id !== 'canvas').map((design) => (
                 <div
                   key={design.id}
                   className={`template-card ${selectedDesign === design.id ? 'selected' : ''}`}

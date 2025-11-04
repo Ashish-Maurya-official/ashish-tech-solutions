@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Logo from '../components/Logo';
 
 export default function Home() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -39,10 +41,10 @@ export default function Home() {
           </div>
 
           <div className="nav-actions">
-            <Link href="/select" className="btn-outline">
-              Sign In
+            <Link href="/dashboard" className="btn-outline">
+              My Resumes
             </Link>
-            <Link href="/select" className="btn-primary">
+            <Link href="/dashboard" className="btn-primary">
               Create Resume
             </Link>
           </div>
@@ -76,7 +78,7 @@ export default function Home() {
             </p>
 
             <div className="hero-cta">
-              <Link href="/select" className="btn-primary large">
+              <Link href="/dashboard" className="btn-primary large">
                 Create My Resume - Free
               </Link>
               <div className="hero-stats">
@@ -293,7 +295,7 @@ export default function Home() {
           </div>
 
           <div className="templates-cta">
-            <Link href="/select" className="btn-primary">
+            <Link href="/dashboard" className="btn-primary">
               View All Templates
             </Link>
           </div>
@@ -306,7 +308,7 @@ export default function Home() {
           <div className="cta-content">
             <h2>Ready to create your professional resume?</h2>
             <p>Join millions of job seekers who have successfully landed their dream jobs with our resume builder.</p>
-            <Link href="/select" className="btn-primary large">
+            <Link href="/dashboard" className="btn-primary large">
               Create My Resume - It's Free
             </Link>
             <div className="cta-features">
@@ -329,7 +331,7 @@ export default function Home() {
           <div className="footer-links">
             <div className="footer-column">
               <h4>Product</h4>
-              <Link href="/select">Resume Builder</Link>
+              <Link href="/dashboard">Resume Builder</Link>
               <Link href="#templates">Templates</Link>
               <Link href="#features">Features</Link>
             </div>

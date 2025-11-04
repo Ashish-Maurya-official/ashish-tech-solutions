@@ -1,7 +1,25 @@
 import ClassicTemplate from './ClassicTemplate';
+import DynamicTemplate from './DynamicTemplate';
+import CanvasTemplate from './CanvasTemplate';
 
 // Template registry with metadata
 export const templates = {
+  canvas: {
+    id: 'canvas',
+    name: 'Canvas',
+    component: CanvasTemplate,
+    category: 'Freeform',
+    color: '#8b5cf6',
+    description: 'Free-form canvas - drag any element anywhere like Canva'
+  },
+  dynamic: {
+    id: 'dynamic',
+    name: 'Dynamic',
+    component: DynamicTemplate,
+    category: 'Modern',
+    color: '#6366f1',
+    description: 'Flexible drag-and-drop layout with full customization'
+  },
   classic: {
     id: 'classic',
     name: 'Classic',
@@ -14,7 +32,7 @@ export const templates = {
 
 // Get template component by ID
 export function getTemplate(templateId) {
-  return templates[templateId] || templates.classic;
+  return templates[templateId] || templates.canvas;
 }
 
 // Get all template IDs

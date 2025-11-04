@@ -46,12 +46,20 @@ const sampleData = {
   skills: resumeData.skills || [],
   languages: resumeData.languages || [],
   links: resumeData.links || [],
-  customSections: []
+  customSections: [],
+  // Canvas elements for document editor
+  elements: [],
+  pageStyle: {
+    backgroundColor: '#ffffff',
+    padding: '40px',
+    width: '210mm',
+    minHeight: '297mm'
+  }
 };
 
 export function ResumeProvider({ children }) {
   const [resumeData, setResumeData] = useState(sampleData);
-  const [selectedDesign, setSelectedDesign] = useState('classic');
+  const [selectedDesign, setSelectedDesign] = useState('canvas');
   const [selectedComponent, setSelectedComponent] = useState(null); // Track which component is selected for styling
 
   const updateField = (path, value) => {
@@ -193,6 +201,80 @@ export function ResumeProvider({ children }) {
     }));
   };
 
+  // Reorder sections
+  const reorderSections = (newOrder) => {
+    setResumeData(prev => ({
+      ...prev,
+      sectionOrder: newOrder
+    }));
+  };
+
+  // Reorder items within a section (experience, education, etc.)
+  const reorderSectionItems = (section, fromIndex, toIndex) => {
+    setResumeData(prev => {
+      const items = [...prev[section]];
+      const [removed] = items.splice(fromIndex, 1);
+      items.splice(toIndex, 0, removed);
+      return {
+        ...prev,
+        [section]: items
+      };
+    });
+  };
+
+  // Update element position (for free-form canvas)
+  const updateElementPosition = (elementId, position) => {
+    setResumeData(prev => ({
+      ...prev,
+      elementPositions: {
+        ...prev.elementPositions,
+        [elementId]: position
+      }
+    }));
+  };
+
+  // Add element to canvas
+  const addElement = (elementData) => {
+    const newElement = {
+      id: `el_${Date.now()}`,
+      ...elementData
+    };
+    
+    setResumeData(prev => ({
+      ...prev,
+      elements: [...(prev.elements || []), newElement]
+    }));
+  };
+
+  // Update element
+  const updateElement = (elementId, updates) => {
+    setResumeData(prev => ({
+      ...prev,
+      elements: (prev.elements || []).map(el => 
+        el.id === elementId ? { ...el, ...updates } : el
+      )
+    }));
+  };
+
+  // Delete element
+  const deleteElement = (elementId) => {
+    setResumeData(prev => ({
+      ...prev,
+      elements: (prev.elements || []).filter(el => el.id !== elementId)
+    }));
+  };
+
+  // Update page style
+  const updatePageStyle = (property, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      pageStyle: {
+        ...prev.pageStyle,
+        [property]: value
+      }
+    }));
+  };
+
   return (
     <ResumeContext.Provider value={{
       resumeData,
@@ -207,6 +289,13 @@ export function ResumeProvider({ children }) {
       updateHeading,
       toggleSectionVisibility,
       updateStyling,
+      reorderSections,
+      reorderSectionItems,
+      updateElementPosition,
+      addElement,
+      updateElement,
+      deleteElement,
+      updatePageStyle,
       addCustomSection,
       removeCustomSection,
       updateCustomSection,
