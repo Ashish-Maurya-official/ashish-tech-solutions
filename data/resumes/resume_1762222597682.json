@@ -1,0 +1,27 @@
+{
+  "id": "resume_1762222597682",
+  "name": "Untitled Resume",
+  "createdAt": "2025-11-04T02:16:37.682Z",
+  "updatedAt": "2025-11-04T02:16:37.682Z",
+  "selectedDesign": "classic",
+  "data": {
+    "name": "",
+    "title": "",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "linkedin": "",
+    "github": "",
+    "summary": "",
+    "experience": [],
+    "education": [],
+    "skills": [],
+    "projects": [],
+    "languages": [],
+    "links": [],
+    "customSections": [],
+    "styling": {},
+    "sectionVisibility": {},
+    "headings": {}
+  }
+}
